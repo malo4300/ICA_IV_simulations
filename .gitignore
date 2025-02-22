@@ -1,4 +1,3 @@
 *.csv
 *.pyc
-treatment_effect_estimation/IV_test_code/*
-.Rproj.user
+data_generation/IV_code/*
