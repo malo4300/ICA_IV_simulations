@@ -1,3 +1,8 @@
 *.csv
 *.pyc
 data_generation/IV_code/*
+*.Rproj.user
+*.Rproj
+*.Rhistory
+*.RData
+.Rproj.user
