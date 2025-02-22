@@ -7,8 +7,8 @@ synthetic_D_method = 'standard'
 kappa_method = 'sigmas'
 
 
-get_path = function(str, cn, i){
-  return(paste(str ,cn, "_" ,i, ".csv", sep = ""))
+get_path = function(str, i){
+  return(paste(str ,i, ".csv", sep = ""))
 }
 
 
@@ -35,7 +35,7 @@ p_values = function(ordered_data, signals){
 
 
 
-p_values_ = function(method, cn, B,J){
+p_values_ = function(method, B,J){
   results = matrix(0, nrow = B, ncol = J+1)
   
   pb <- progress_bar$new(
@@ -44,10 +44,9 @@ p_values_ = function(method, cn, B,J){
     clear = FALSE, 
     width = 60
   )
-  
   for (i in 0:(B-1)) {
-    dt_path = get_path("data_generation/different_confounding_levels/data/data_obs_large_conf_", cn, i)
-    sg_path = get_path(paste0("data_generation/different_confounding_levels/data/estimated_signals_", method ,"_large_conf_"), cn, i)
+    dt_path = get_path("data_generation/bounded_treatment_effect/data/data_obs_init_flipp_",i)
+    sg_path = get_path(paste0("data_generation/bounded_treatment_effect/data/estimated_signals_", method ,"_init_flipp_"),  i)
     data =  read.csv(dt_path, header = 1)
     signals = read.csv(sg_path, header = 1) 
     ordered_data = order_data(data)
@@ -69,8 +68,8 @@ p_values_true_sources = function(cn, B,J){
   )
   
   for (i in 0:(B-1)) {
-    sg_path = get_path("data_generation/different_confounding_levels/data/true_signals_large_conf_", cn, i) 
-    dt_path = get_path("data_generation/different_confounding_levels/data/data_obs_large_conf_", cn, i)
+    sg_path = get_path("data_generation/bounded_treatment_effect/data/true_signals_init_flipp_", i) 
+    dt_path = get_path("data_generation/bounded_treatment_effect/data/data_obs_init_flipp_",i)
     data =  read.csv(dt_path, header = 1)
     signals = read.csv(sg_path, header = 1)  +  matrix(rnorm(n*J,0,.1), n,J) # required for IV test to run
     ordered_data = order_data(data)
@@ -87,19 +86,19 @@ p_values_true_sources = function(cn, B,J){
 
 calculate_iv_values = function(B){
   
-  cn = c(1,3,6)
-
-  methods = cbind("VarEM", "CausalVarEM")
   
-  for (i in 1:length(cn)) {
+
+  methods = cbind("CausalVarEM")
+  
+  
     for (j in 1:length(methods)) {
-      results = p_values_(method = methods[j], cn = cn[i], B, J)
-      #write.csv(results, file = paste0("data_generation/different_confounding_levels/", methods[j], "_conf_", cn[i], ".csv"))
+      results = p_values_(method = methods[j], B, J)
+      write.csv(results, file = paste0("data_generation/bounded_treatment_effect/", methods[j],".csv"))
     }
     results = p_values_true_sources(cn[i], B, J)   
-    #write.csv(results, file = paste0("data_generation/different_confounding_levels/true_source_conf_", cn[i], ".csv"))
+    write.csv(results, file = paste0("data_generation/bounded_treatment_effect/true_source.csv"))
     
-  }
+  
   
 }
 
