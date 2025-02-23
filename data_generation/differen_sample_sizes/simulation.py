@@ -3,10 +3,10 @@ import pandas as pd
 import numpy as np
 import fcit
 
-B = 1
+B = 100
 J = 9
 I = J-1
-iter = 1
+iter = 100
 sample_sizes = [1000, 5000, 10000]
 
 def create_ICA_output(estimator, dgp):
