@@ -1,6 +1,7 @@
 source("treatment_effect_estimation/treatment_effect_estimators/treatment_effect_estimators.R")
 
-
+##################################################################################
+#### change paths in line 6 to 25 to Either use CausalVarEM, VarEM, or true sources
 
 get_signals = function(seed){
   read.csv(get_path("data_generation/bounded_treatment_effect/data/estimated_signals_CausalVarEM_init_flipp_", seed))
@@ -38,8 +39,9 @@ for (i in 1:100) {
 }
 
 
-
-# confounder source -----
+########################################
+# confounder source as input to OLS-----
+########################################
 
 ind = which(sapply(cand_confounder_idx, function(x) length(x) == 1 && !is.na(x)))
 
@@ -94,7 +96,7 @@ rmse(true_treatment_effect_confounder_idx, estimated_treatment_efect_column_extr
 
 ##############################
 # estimation on 7 sources -----
-
+##############################
 
 ind = which(sapply(cand_source_idx, function(x) x[1] != x[2]))
 

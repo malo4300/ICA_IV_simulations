@@ -10,7 +10,7 @@ I = J-1
 iter = 100
 
 name = "init_flipp"
-methods = ["CausalVarEM"]
+methods = ["VarEM", "CausalVarEM"]
 
 def create_ICA_output(estimator, dgp):
     data = dgp(noise_dict= {"loc" : 0, "scale" : 0}, prior= {"loc" : 0, "scale" : 1/np.sqrt(2)}, level_of_confounding = 1)
@@ -47,13 +47,11 @@ def calculate_p_values(conditional_function, unconditional_function):
         for i in tqdm(range(B)):
             data = pd.read_csv(f"bounded_treatment_effect/data/data_obs_init_flipp_{i}.csv", header=0).values
             signals = pd.read_csv(f"bounded_treatment_effect/data/estimated_signals_{method}_init_flipp_{i}.csv", header=0).values
-            true_signals = pd.read_csv(f"bounded_treatment_effect/data/true_signals_init_flipp_{i}.csv", header=0).values
             p_values_unconditional[i,:] = unconditional_function(data, signals, n, J)
             p_values_conditional[i,:] = conditional_function(data, signals, n, J)
 
                 
-        pd.DataFrame(p_values_unconditional).reset_index().to_csv(f"bounded_treatment_effect/p_values_uncnditional_{method}.csv", header=False, index = False)
-        
+        pd.DataFrame(p_values_unconditional).reset_index().to_csv(f"bounded_treatment_effect/p_values_unconditional_{method}.csv", header=False, index = False)
         pd.DataFrame(p_values_conditional).reset_index().to_csv(f"bounded_treatment_effect/p_values_conditional_{method}.csv", header=False, index = False)
     
     p_values_conditional_true_signals = np.ones((B,J))
@@ -65,7 +63,6 @@ def calculate_p_values(conditional_function, unconditional_function):
         p_values_conditional_true_signals[i,:] = conditional_function(data, true_signals, n, J)
         p_values_unconditional_true_signals[i,:] = unconditional_function(data, true_signals, n, J)
         
-    pd.DataFrame(p_values_conditional_true_signals).reset_index().to_csv(f"different_confounding_levels/p_values_conditional_true_signals.csv", header=False, index = False)
-    
-    pd.DataFrame(p_values_unconditional_true_signals).reset_index().to_csv(f"different_confounding_levels/p_values_unconditional_true_signals.csv", header=False, index = False)
+    pd.DataFrame(p_values_conditional_true_signals).reset_index().to_csv(f"bounded_treatment_effect/p_values_conditional_true_signals.csv", header=False, index = False)
+    pd.DataFrame(p_values_unconditional_true_signals).reset_index().to_csv(f"bounded_treatment_effect/p_values_unconditional_true_signals.csv", header=False, index = False)
     

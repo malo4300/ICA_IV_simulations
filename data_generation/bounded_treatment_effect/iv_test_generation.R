@@ -88,7 +88,7 @@ calculate_iv_values = function(B){
   
   
 
-  methods = cbind("CausalVarEM")
+  methods = cbind("CausalVarEM", "VarEM")
   
   
     for (j in 1:length(methods)) {

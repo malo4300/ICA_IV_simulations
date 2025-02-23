@@ -64,5 +64,5 @@ def calculate_p_values(conditional_function, unconditional_function):
             p_values_conditional_true_signals[i,:] = conditional_function(data, true_signals, n, J)
             p_values_unconditional_true_signals[i,:] = unconditional_function(data, true_signals, n, J)
             
-        pd.DataFrame(p_values_conditional_true_signals).reset_index().to_csv(f"different_confounding_levels/p_values_conditional_true_sources_{cn}", header=False, index = False)
-        pd.DataFrame(p_values_unconditional_true_signals).reset_index().to_csv(f"different_confounding_levels/p_values_unconditional_true_sources_{cn}", header=False, index = False)
+        pd.DataFrame(p_values_conditional_true_signals).reset_index().to_csv(f"different_confounding_levels/p_values_conditional_true_sources_{cn}.csv", header=False, index = False)
+        pd.DataFrame(p_values_unconditional_true_signals).reset_index().to_csv(f"different_confounding_levels/p_values_unconditional_true_sources_{cn}.csv", header=False, index = False)
