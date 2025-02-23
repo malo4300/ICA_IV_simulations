@@ -7,7 +7,7 @@ B = 1
 J = 9
 I = J-1
 iter = 1
-sample_sizes = [100, 1000, 10000]
+sample_sizes = [1000, 5000, 10000]
 
 def create_ICA_output(estimator, dgp):
     print("construct dataset and fit ICA")
