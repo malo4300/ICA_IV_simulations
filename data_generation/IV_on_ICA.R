@@ -9,12 +9,19 @@ rm(list = ls()) # To clear all
 
 
 #### define the simulation #######################
- install.packages("knockoff")
-  install.packages("pracma")
-  install.packages("MASS")
-  install.packages("corpcor")
-  install.packages("boot")
-  install.packages("parallel")
+lib_path <- file.path("..", "..", "R_libs")
+
+# Create the directory if it doesn't exist
+if (!dir.exists(lib_path)) {
+  dir.create(lib_path, recursive = TRUE)
+}
+
+install.packages("knockoff", lib = lib_path)
+install.packages("pracma", lib = lib_path)
+install.packages("MASS", lib = lib_path)
+install.packages("corpcor", lib = lib_path)
+install.packages("boot", lib = lib_path)
+install.packages("parallel", lib = lib_path)
 
 
 # load required packages
