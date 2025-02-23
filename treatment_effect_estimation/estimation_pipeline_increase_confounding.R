@@ -1,6 +1,6 @@
 source("treatment_effect_estimation/treatment_effect_estimators/treatment_effect_estimators.R")
 
-conf = 1
+conf = 6
 get_signals = function(seed){
   read.csv(get_path(paste0("data_generation/different_confounding_levels/data/estimated_signals_CausalVarEM_large_conf_", conf, "_"), seed))
 }
@@ -22,7 +22,7 @@ save_treatment_estimation = function(list_of_df, name){
 }
 
 p_values_iv = read.csv(paste("data_generation/different_confounding_levels/CausalVarEM_conf_",conf,".csv", sep = ""), row.names = 1)[-1]
-p_values_indp = read.csv(paste("data_generation/different_confounding_levels/p_values_conditional_CausalVarEM_",conf,".csv", sep = ""), row.names = NULL, header= FALSE)[-1]
+p_values_indp_cond = read.csv(paste("data_generation/different_confounding_levels/p_values_conditional_CausalVarEM_",conf,".csv", sep = ""), row.names = NULL, header= FALSE)[-1]
 p_values_indp_undcond = read.csv(paste("data_generation/different_confounding_levels/p_values_unconditional_CausalVarEM_", conf, ".csv", sep = "") ,header= FALSE)[-1]
 
 
@@ -31,7 +31,7 @@ cand_source_idx = vector("list", 100)
 
 
 for (i in 1:100) {
-  candidates <- estimated_confounder_index_v2(p_values_iv[i,], p_values_indp[i,])
+  candidates <- estimated_confounder_index_v2(p_values_iv[i,], p_values_indp_cond[i,])
   cand_confounder_idx[[i]] <- candidates
   candidates <- estimated_treatmet_and_outcome_ind(p_values_iv[i,], p_values_indp_undcond[i,])
   cand_source_idx[[i]] <- candidates
@@ -86,12 +86,12 @@ rmse(true_treatment_effect_confounder_idx, estimated_treatment_efect_confounder_
 rmse(true_treatment_effect_confounder_idx, ols_biased)
 rmse(true_treatment_effect_confounder_idx, estimated_treatment_efect_column_extraction)
 
-#save_treatment_estimation(list(seed = ind-1,
-#                               true_treatment_effect = true_treatment_effect_confounder_idx,
-#                               estimated_treatment_using_confounder_source = estimated_treatment_efect_confounder_idx,
-#                               ols_biased = ols_biased,
-#                               column_extraction = estimated_treatment_efect_column_extraction,
-#                               level_of_confounding = level_of_confounding), paste("VarEM_confounder_source_cn_", conf, sep =""))
+save_treatment_estimation(list(seed = ind-1,
+                               true_treatment_effect = true_treatment_effect_confounder_idx,
+                               estimated_treatment_using_confounder_source = estimated_treatment_efect_confounder_idx,
+                               ols_biased = ols_biased,
+                               column_extraction = estimated_treatment_efect_column_extraction,
+                               level_of_confounding = level_of_confounding), paste("CausalVarEM_confounder_source_cn_", conf, sep =""))
 
 ##############################
 # estimation on 7 sources -----
@@ -146,14 +146,13 @@ rmse(true_treatment_effect_confounder_idx, ols_biased)
 rmse(true_treatment_effect_confounder_idx, estimated_treatment_efect_column_extraction)
 
 
-# base lines, ols and column extraction
 
-#save_treatment_estimation(list(seed = ind-1,
-#                               true_treatment_effect = true_treatment_effect_confounder_idx,
-#                               estimated_treatment_on_sources = estimated_treatment_efect_source_idx,
-#                              ols_biased = ols_biased,
-#                               column_extraction = estimated_treatment_efect_column_extraction,
-#                               level_of_confounding = level_of_confounding), paste("VarEM_7Sources_cn_", conf, sep =""))
+save_treatment_estimation(list(seed = ind-1,
+                               true_treatment_effect = true_treatment_effect_confounder_idx,
+                               estimated_treatment_on_sources = estimated_treatment_efect_source_idx,
+                              ols_biased = ols_biased,
+                               column_extraction = estimated_treatment_efect_column_extraction,
+                               level_of_confounding = level_of_confounding), paste("CausalVarEM_7_sources_cn_", conf, sep =""))
 
 
 

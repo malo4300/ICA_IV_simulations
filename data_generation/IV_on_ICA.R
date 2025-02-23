@@ -10,10 +10,6 @@ rm(list = ls()) # To clear all
 
 #### define the simulation #######################
 
-### specify the simulation that needs to be run ###############
-simulation = "different_confounding_levels"
-###########################
-
 
 
 # load required packages
@@ -37,18 +33,40 @@ source('data_generation/IV_code//estimate_confounding_sigmas.R')
 source('data_generation/IV_code//estimate_confounding_via_kernel_smoothing.R')
 source('data_generation/IV_code//estimate_confounding_sigmas.R')
 
-
+get_yes_or_no <- function(simulation) {
+  repeat {
+    user_input <- tolower(trimws(readline(prompt = paste0("Do you want do calculate to run the IV test for ", simulation, ". Please enter 'yes' or 'no': "))))
+    if (user_input %in% c("yes", "no")) {
+      return(user_input)
+    } else {
+      cat("Invalid input. Please type 'yes' or 'no'.\n")
+    }
+  }
+}
 
 # this line imports the iv_test_generation.R file implementing the calculate_iv_values function for each setting
-source(paste0("data_generation/" , simulation,"/iv_test_generation.R" ))
-#b number of datasets
-B =100
-# stop the timer
-start_time <- Sys.time()  
-calculate_iv_values(B = B)
-end_time <- Sys.time()  
 
-time_taken <- as.numeric(difftime(end_time, start_time, units = "hours"))
-print(paste("Time taken:", time_taken, "hours"))
+
+### specify the simulation that needs to be run ###############
+simulation = "bounded_treatment_effect"
+###########################
+
+source(paste0("data_generation/" , simulation,"/iv_test_generation.R" ))
+
+#B number of datasets, can be reduced to test the pipline
+B =100
+
+
+if (get_yes_or_no(simulation) == "yes") {
+  start_time <- Sys.time()
+  calculate_iv_values(B = B)
+  end_time <- Sys.time()
+  time_taken <- as.numeric(difftime(end_time, start_time, units = "hours"))
+  print(paste("Time taken:", time_taken, "hours"))
+} else {
+  cat("Operation canceled.\n")
+}
+
+
 
 

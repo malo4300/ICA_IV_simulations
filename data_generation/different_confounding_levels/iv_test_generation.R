@@ -75,10 +75,10 @@ calculate_iv_values = function(B){
   for (i in 1:length(cn)) {
     for (j in 1:length(methods)) {
       results = p_values_(method = methods[j], cn = cn[i], B, J)
-      #write.csv(results, file = paste0("data_generation/different_confounding_levels/", methods[j], "_conf_", cn[i], ".csv"))
+      write.csv(results, file = paste0("data_generation/different_confounding_levels/", methods[j], "_conf_", cn[i], ".csv"))
     }
     results = p_values_true_sources(cn[i], B, J)   
-    #write.csv(results, file = paste0("data_generation/different_confounding_levels/true_source_conf_", cn[i], ".csv"))
+    write.csv(results, file = paste0("data_generation/different_confounding_levels/true_source_conf_", cn[i], ".csv"))
     
   }
   
