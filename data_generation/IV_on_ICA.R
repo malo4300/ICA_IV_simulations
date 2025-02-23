@@ -61,7 +61,7 @@ get_yes_or_no <- function(simulation) {
 
 
 ### specify the simulation that needs to be run ###############
-simulation = "bounded_treatment_effect"
+simulation = "differen_sample_sizes"
 ###########################
 
 source(paste0("" , simulation,"/iv_test_generation.R" ))
