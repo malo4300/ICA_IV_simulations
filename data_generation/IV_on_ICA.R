@@ -36,7 +36,7 @@ packages <- c("boot",
 lapply(packages,require,character.only=TRUE)
 
 # load necessary functions
-source('data_generation/IV_code/fn_2SLS.R')
+source('IV_code/fn_2SLS.R')
 source('data_generation/IV_code//estimate_kappa_bootstrap_wrapper.R')
 source('data_generation/IV_code//fn_complement.R')
 source('data_generation/IV_code//fn_complement_knockoff.R')
