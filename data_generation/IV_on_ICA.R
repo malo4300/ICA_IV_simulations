@@ -46,16 +46,16 @@ source('IV_code//estimate_confounding_sigmas.R')
 source('IV_code//estimate_confounding_via_kernel_smoothing.R')
 source('IV_code//estimate_confounding_sigmas.R')
 
-get_yes_or_no <- function(simulation) {
-  repeat {
-    user_input <- tolower(trimws(readline(prompt = paste0("Do you want do calculate to run the IV test for ", simulation, ". Please enter 'yes' or 'no': "))))
-    if (user_input %in% c("yes", "no")) {
-      return(user_input)
-    } else {
-      cat("Invalid input. Please type 'yes' or 'no'.\n")
-    }
-  }
-}
+#get_yes_or_no <- function(simulation) {
+#  repeat {
+#    user_input <- tolower(trimws(readline(prompt = paste0("Do you want do calculate to run the IV test for ", simulation, ". Please enter 'yes' or 'no': "))))
+#    if (user_input %in% c("yes", "no")) {
+#      return(user_input)
+#    } else {
+#      cat("Invalid input. Please type 'yes' or 'no'.\n")
+#    }
+#  }
+#}
 
 # this line imports the iv_test_generation.R file implementing the calculate_iv_values function for each setting
 
