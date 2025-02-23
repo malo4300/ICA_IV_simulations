@@ -7,6 +7,7 @@
 
 rm(list = ls()) # To clear all
 
+options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 #### define the simulation #######################
 lib_path <- file.path("..", "..", "R_libs")
