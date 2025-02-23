@@ -37,14 +37,14 @@ lapply(packages,require,character.only=TRUE)
 
 # load necessary functions
 source('IV_code/fn_2SLS.R')
-source('data_generation/IV_code//estimate_kappa_bootstrap_wrapper.R')
-source('data_generation/IV_code//fn_complement.R')
-source('data_generation/IV_code//fn_complement_knockoff.R')
-source('data_generation/IV_code//fn_test_instrument_validity.R')
-source('data_generation/IV_code//estimate_confounding_via_kernel_smoothing.R')
-source('data_generation/IV_code//estimate_confounding_sigmas.R')
-source('data_generation/IV_code//estimate_confounding_via_kernel_smoothing.R')
-source('data_generation/IV_code//estimate_confounding_sigmas.R')
+source('IV_code//estimate_kappa_bootstrap_wrapper.R')
+source('IV_code//fn_complement.R')
+source('IV_code//fn_complement_knockoff.R')
+source('IV_code//fn_test_instrument_validity.R')
+source('IV_code//estimate_confounding_via_kernel_smoothing.R')
+source('IV_code//estimate_confounding_sigmas.R')
+source('IV_code//estimate_confounding_via_kernel_smoothing.R')
+source('IV_code//estimate_confounding_sigmas.R')
 
 get_yes_or_no <- function(simulation) {
   repeat {
