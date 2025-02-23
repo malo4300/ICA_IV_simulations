@@ -70,15 +70,16 @@ source(paste0("" , simulation,"/iv_test_generation.R" ))
 B =1
 
 
-if (get_yes_or_no(simulation) == "yes") {
+#if (get_yes_or_no(simulation) == "yes") {
   start_time <- Sys.time()
   calculate_iv_values(B = B)
   end_time <- Sys.time()
   time_taken <- as.numeric(difftime(end_time, start_time, units = "hours"))
   print(paste("Time taken:", time_taken, "hours"))
-} else {
-  cat("Operation canceled.\n")
-}
+
+#} else {
+#  cat("Operation canceled.\n")
+#}
 
 
 
