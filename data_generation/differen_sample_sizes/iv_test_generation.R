@@ -67,7 +67,7 @@ p_values_true_sources = function(n, B,J){
 
 calculate_iv_values = function(B){
   
-  ns = c(100,1000,10000)
+  ns = c(1000,5000,10000)
 
   methods = cbind("VarEM", "CausalVarEM")
   
