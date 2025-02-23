@@ -1,4 +1,5 @@
 library(progress)
+source("data_generation/IV_code/helper.R")
 Bootstraps = 250 # number of bootstrap draws
 ncpus = 12
 J = 9
@@ -9,26 +10,6 @@ kappa_method = 'sigmas'
 
 get_path = function(str, i){
   return(paste(str ,i, ".csv", sep = ""))
-}
-
-
-order_data = function(data){
-  ordered_data = matrix(0, nrow = nrow(data), ncol = ncol(data))
-  ordered_data[,1] = data[, ncol(data)] # Y has to be the first column, in data it is the last
-  ordered_data[,2:(ncol(data)-1)] = as.matrix(data[,1:(ncol(data)-2)]) # controls in the middle
-  ordered_data[,ncol(data)] = data[, ncol(data)-1] # Treatment as last
-  return(ordered_data)
-}
-
-p_values = function(ordered_data, signals){
-  p_val = rep(0,ncol(signals))
-  for (i in 1:ncol(signals)) {
-    p_val[i] = fn_test_instrument_validity(ordered_data, signals[[names(signals)[i]]], Bootstraps, 
-                                           ncpus, 
-                                           kappa_method,
-                                           synthetic_D_method)$pseudo_p
-  }
-  return(p_val)
 }
 
 

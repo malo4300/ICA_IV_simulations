@@ -43,10 +43,12 @@ source('data_generation/IV_code//estimate_confounding_sigmas.R')
 source(paste0("data_generation/" , simulation,"/iv_test_generation.R" ))
 #b number of datasets
 B =100
+# stop the timer
+start_time <- Sys.time()  
 calculate_iv_values(B = B)
+end_time <- Sys.time()  
 
-
-
-
+time_taken <- as.numeric(difftime(end_time, start_time, units = "hours"))
+print(paste("Time taken:", time_taken, "hours"))
 
 

@@ -3,11 +3,11 @@ import pandas as pd
 import numpy as np
 import fcit
 
-B = 1
+B = 100
 n = 1000
 J = 9
 I = J-1
-iter = 1
+iter = 100
 level_of_confounding =[1,3,6]
 def create_ICA_output(estimator, dgp):
     print("construct dataset and fit ICA")
@@ -32,7 +32,7 @@ def create_ICA_output(estimator, dgp):
                             random_seed= i,  mode = "VarEM",
                             init_range = [-3,3])
             est.fit(data_generator.data_observed,J, noise_params= {"mean" : 0, "std" : 1}, progress_bar=False)
-            pd.DataFrame(est.A).to_csv(f"different_confounding_levels/data/estimated_mixing_CausalVarEM_large_{cn}_{i}.csv", index = False)
+            pd.DataFrame(est.A).to_csv(f"different_confounding_levels/data/estimated_mixing_VarEM_large_{cn}_{i}.csv", index = False)
             pd.DataFrame(est.Signals).to_csv(f"different_confounding_levels/data/estimated_signals_VarEM_large_conf_{cn}_{i}.csv", index = False)
 
 
@@ -52,8 +52,8 @@ def calculate_p_values(conditional_function, unconditional_function):
                 p_values_conditional[i,:] = conditional_function(data, signals, n, J)
             
         
-            pd.DataFrame(p_values_unconditional).reset_index().to_csv(f"different_confounding_levels/p_values_unconditional_{method}_{cn}", header=False, index = False)
-            pd.DataFrame(p_values_conditional).reset_index().to_csv(f"different_confounding_levels/p_values_conditional_{method}_{cn}", header=False, index = False)
+            pd.DataFrame(p_values_unconditional).reset_index().to_csv(f"different_confounding_levels/p_values_unconditional_{method}_{cn}.csv", header=False, index = False)
+            pd.DataFrame(p_values_conditional).reset_index().to_csv(f"different_confounding_levels/p_values_conditional_{method}_{cn}.csv", header=False, index = False)
     for cn in level_of_confounding:
         p_values_conditional_true_signals = np.ones((B,J))
         p_values_unconditional_true_signals = np.ones((B,J))
