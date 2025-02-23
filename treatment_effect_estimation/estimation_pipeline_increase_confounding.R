@@ -2,10 +2,10 @@ source("treatment_effect_estimation/treatment_effect_estimators/treatment_effect
 
 conf = 6
 get_signals = function(seed){
-  read.csv(get_path(paste0("data_generation/different_confounding_levels/data/estimated_signals_CausalVarEM_large_conf_", conf, "_"), seed))
+  read.csv(get_path(paste0("data_generation/different_confounding_levels/data/estimated_signals_VarEM_large_conf_", conf, "_"), seed))
 }
 get_estimated_mixing_matrix = function(seed){
-  read.csv(paste0("data_generation/different_confounding_levels/data/estimated_mixing_CausalVarEM_large_conf_", conf, "_", seed, ".csv"))
+  read.csv(paste0("data_generation/different_confounding_levels/data/estimated_mixing_VarEM_large_conf_", conf, "_", seed, ".csv"))
 }
 
 get_data = function(seed){
@@ -21,9 +21,9 @@ save_treatment_estimation = function(list_of_df, name){
   write.csv(data.frame(list_of_df), file = paste("treatment_effect_estimation/treatment_effect_estimations/", name, ".csv", sep = ""))
 }
 
-p_values_iv = read.csv(paste("data_generation/different_confounding_levels/CausalVarEM_conf_",conf,".csv", sep = ""), row.names = 1)[-1]
-p_values_indp_cond = read.csv(paste("data_generation/different_confounding_levels/p_values_conditional_CausalVarEM_",conf,".csv", sep = ""), row.names = NULL, header= FALSE)[-1]
-p_values_indp_undcond = read.csv(paste("data_generation/different_confounding_levels/p_values_unconditional_CausalVarEM_", conf, ".csv", sep = "") ,header= FALSE)[-1]
+p_values_iv = read.csv(paste("data_generation/different_confounding_levels/VarEM_conf_",conf,".csv", sep = ""), row.names = 1)[-1]
+p_values_indp_cond = read.csv(paste("data_generation/different_confounding_levels/p_values_conditional_VarEM_",conf,".csv", sep = ""), row.names = NULL, header= FALSE)[-1]
+p_values_indp_undcond = read.csv(paste("data_generation/different_confounding_levels/p_values_unconditional_VarEM_", conf, ".csv", sep = "") ,header= FALSE)[-1]
 
 
 cand_confounder_idx <- vector("list", 100)
@@ -72,7 +72,6 @@ for (i in 1:l){
 }  
 
 
-
 plot(true_treatment_effect_confounder_idx,estimated_treatment_efect_confounder_idx ,xlab = "True treatment effect", ylab = "Estimated treatment effect")
 points(true_treatment_effect_confounder_idx, ols_biased, col ="red")
 points(true_treatment_effect_confounder_idx, estimated_treatment_efect_column_extraction, col ="blue")
@@ -91,7 +90,7 @@ save_treatment_estimation(list(seed = ind-1,
                                estimated_treatment_using_confounder_source = estimated_treatment_efect_confounder_idx,
                                ols_biased = ols_biased,
                                column_extraction = estimated_treatment_efect_column_extraction,
-                               level_of_confounding = level_of_confounding), paste("CausalVarEM_confounder_source_cn_", conf, sep =""))
+                               level_of_confounding = level_of_confounding), paste("VarEM_confounder_source_cn_", conf, sep =""))
 
 ##############################
 # estimation on 7 sources -----
@@ -152,7 +151,7 @@ save_treatment_estimation(list(seed = ind-1,
                                estimated_treatment_on_sources = estimated_treatment_efect_source_idx,
                               ols_biased = ols_biased,
                                column_extraction = estimated_treatment_efect_column_extraction,
-                               level_of_confounding = level_of_confounding), paste("CausalVarEM_7_sources_cn_", conf, sep =""))
+                               level_of_confounding = level_of_confounding), paste("VarEM_7_sources_cn_", conf, sep =""))
 
 
 

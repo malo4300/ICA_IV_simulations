@@ -40,20 +40,20 @@ def calculate_p_values(conditional_function, unconditional_function):
     print("calculate_p_values")
     methods = ["VarEM","CausalVarEM"]
 
-    for method in methods:
-        for cn in level_of_confounding:
-            p_values_unconditional = np.ones((B,J))
-            p_values_conditional = np.ones((B,J))
-           
-            for i in tqdm(range(B)):
-                data = pd.read_csv(f"different_confounding_levels/data/data_obs_large_conf_{cn}_{i}.csv", header=0).values
-                signals = pd.read_csv(f"different_confounding_levels/data/estimated_signals_{method}_large_conf_{cn}_{i}.csv", header=0).values
-                p_values_unconditional[i,:] = unconditional_function(data, signals, n, J)
-                p_values_conditional[i,:] = conditional_function(data, signals, n, J)
-            
-        
-            pd.DataFrame(p_values_unconditional).reset_index().to_csv(f"different_confounding_levels/p_values_unconditional_{method}_{cn}.csv", header=False, index = False)
-            pd.DataFrame(p_values_conditional).reset_index().to_csv(f"different_confounding_levels/p_values_conditional_{method}_{cn}.csv", header=False, index = False)
+    #for method in methods:
+    #    for cn in level_of_confounding:
+    #        p_values_unconditional = np.ones((B,J))
+    #        p_values_conditional = np.ones((B,J))
+    #       
+    #        for i in tqdm(range(B)):
+    #            data = pd.read_csv(f"different_confounding_levels/data/data_obs_large_conf_{cn}_{i}.csv", header=0).values
+    #            signals = pd.read_csv(f"different_confounding_levels/data/estimated_signals_{method}_large_conf_{cn}_{i}.csv", header=0).values
+    #            p_values_unconditional[i,:] = unconditional_function(data, signals, n, J)
+    #            p_values_conditional[i,:] = conditional_function(data, signals, n, J)
+    #        
+    #    
+    #        pd.DataFrame(p_values_unconditional).reset_index().to_csv(f"different_confounding_levels/p_values_unconditional_{method}_{cn}.csv", header=False, index = False)
+    #        pd.DataFrame(p_values_conditional).reset_index().to_csv(f"different_confounding_levels/p_values_conditional_{method}_{cn}.csv", header=False, index = False)
     for cn in level_of_confounding:
         p_values_conditional_true_signals = np.ones((B,J))
         p_values_unconditional_true_signals = np.ones((B,J))

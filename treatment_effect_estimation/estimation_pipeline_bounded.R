@@ -1,7 +1,7 @@
 source("treatment_effect_estimation/treatment_effect_estimators/treatment_effect_estimators.R")
 
 ##################################################################################
-#### change paths in line 6 to 25 to Either use CausalVarEM, VarEM, or true sources
+#### change paths in line 6 to 25 to Either use VarEM, VarEM, or true sources
 
 get_signals = function(seed){
     read.csv(get_path("data_generation/bounded_treatment_effect/data/estimated_signals_VarEM_init_flipp_", seed))
@@ -148,6 +148,6 @@ save_treatment_estimation(list(seed = ind-1,
                                estimated_treatment_on_sources = estimated_treatment_efect_source_idx,
                                ols_biased = ols_biased,
                                column_extraction = estimated_treatment_efect_column_extraction,
-                               level_of_confounding = level_of_confounding), "true_sources_7_sources_bounded_treatment")
+                               level_of_confounding = level_of_confounding), "VarEM_7_sources_bounded_treatment")
 
 
