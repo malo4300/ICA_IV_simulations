@@ -27,7 +27,7 @@ p_values_ = function(method, n, B,J){
   
   for (i in 0:(B-1)) {
     dt_path = get_path("differen_sample_sizes/data/data_obs_n:", n, i)
-    sg_path = get_path(paste0("differen_sample_sizes/data/estimated_mixing_CausalVarEM_", method ,"_n:"), n, i)
+    sg_path = get_path(paste0("differen_sample_sizes/data/estimated_mixing_", method ,"_n:"), n, i)
     data =  read.csv(dt_path, header = 1)
     signals = read.csv(sg_path, header = 1) 
     ordered_data = order_data(data)
