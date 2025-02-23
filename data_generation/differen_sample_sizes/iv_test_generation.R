@@ -74,10 +74,10 @@ calculate_iv_values = function(B){
   for (i in 1:length(ns)) {
     for (j in 1:length(methods)) {
       results = p_values_(method = methods[j], n = ns[i], B, J)
-      write.csv(results, file = paste0("differen_sample_sizes/", methods[j], "_n:", n[i], ".csv"))
+      write.csv(results, file = paste0("differen_sample_sizes/", methods[j], "_n:", ns[i], ".csv"))
     }
     results = p_values_true_sources(ns[i], B, J)   
-    write.csv(results, file = paste0("differen_sample_sizes/true_source_n:", n[i], ".csv"))
+    write.csv(results, file = paste0("differen_sample_sizes/true_source_n:", ns[i], ".csv"))
     
   }
   
