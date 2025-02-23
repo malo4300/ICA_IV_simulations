@@ -64,7 +64,7 @@ get_yes_or_no <- function(simulation) {
 simulation = "bounded_treatment_effect"
 ###########################
 
-source(paste0("data_generation/" , simulation,"/iv_test_generation.R" ))
+source(paste0("" , simulation,"/iv_test_generation.R" ))
 
 #B number of datasets, can be reduced to test the pipline
 B =1
