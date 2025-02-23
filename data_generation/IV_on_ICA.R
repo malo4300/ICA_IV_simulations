@@ -54,7 +54,7 @@ simulation = "bounded_treatment_effect"
 source(paste0("data_generation/" , simulation,"/iv_test_generation.R" ))
 
 #B number of datasets, can be reduced to test the pipline
-B =100
+B =1
 
 
 if (get_yes_or_no(simulation) == "yes") {
