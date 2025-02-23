@@ -9,7 +9,12 @@ rm(list = ls()) # To clear all
 
 
 #### define the simulation #######################
-
+ install.packages("knockoff")
+  install.packages("pracma")
+  install.packages("MASS")
+  install.packages("corpcor")
+  install.packages("boot")
+  install.packages("parallel")
 
 
 # load required packages
