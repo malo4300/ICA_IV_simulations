@@ -108,3 +108,10 @@ In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = T
 > #if (get_yes_or_no(simulation) == "yes") {
 >   start_time <- Sys.time()
 >   calculate_iv_values(B = B)
+Fehler in kappa_inst_boot - kappa_syn_boot : 
+  nicht-numerisches Argument für binären Operator
+Ruft auf: calculate_iv_values ... p_values_ -> p_values -> fn_test_instrument_validity
+Zusätzlich: Warnmeldung:
+In parallel::mclapply(seq_len(RR), fn, mc.cores = ncpus) :
+  eingeplante Kerne 27, 26, 22, 20, 19, 10, 9, 6, 4, 2, 28, 8, 5, 12, 7, 11, 18, 16, 14, 25, 1, 3, 21, 23, 29, 30, 15, 17 berichten Fehler in Benutzerkode, alle Werte der Jobs werden betroffen sein
+Ausführung angehalten
