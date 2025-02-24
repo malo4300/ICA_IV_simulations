@@ -1,0 +1,110 @@
+
+R version 4.4.1 (2024-06-14) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R ist freie Software und kommt OHNE JEGLICHE GARANTIE.
+Sie sind eingeladen, es unter bestimmten Bedingungen weiter zu verbreiten.
+Tippen Sie 'license()' or 'licence()' für Details dazu.
+
+R ist ein Gemeinschaftsprojekt mit vielen Beitragenden.
+Tippen Sie 'contributors()' für mehr Information und 'citation()',
+um zu erfahren, wie R oder R packages in Publikationen zitiert werden können.
+
+Tippen Sie 'demo()' für einige Demos, 'help()' für on-line Hilfe, oder
+'help.start()' für eine HTML Browserschnittstelle zur Hilfe.
+Tippen Sie 'q()', um R zu verlassen.
+
+> 
+> ####################################################################
+> # implementation of instrument validity test developed in 
+> # Burauel, Patrick F. "Evaluating Instrument Validity using the Principle of Independent Mechanisms." 
+> # Journal of Machine Learning Research 24.176 (2023): 1-56.
+> ####################################################################
+> 
+> rm(list = ls()) # To clear all
+> 
+> 
+> 
+> # load required packages
+> packages <- c("boot",
++               "corpcor",
++               "MASS",
++               "parallel",
++               "pracma",
++               "knockoff")
+> 
+> lapply(packages,require,character.only=TRUE)
+Lade nötiges Paket: boot
+Lade nötiges Paket: corpcor
+Lade nötiges Paket: MASS
+Lade nötiges Paket: parallel
+Lade nötiges Paket: pracma
+
+Attache Paket: ‘pracma’
+
+Das folgende Objekt ist maskiert ‘package:boot’:
+
+    logit
+
+Lade nötiges Paket: knockoff
+[[1]]
+[1] TRUE
+
+[[2]]
+[1] TRUE
+
+[[3]]
+[1] TRUE
+
+[[4]]
+[1] TRUE
+
+[[5]]
+[1] TRUE
+
+[[6]]
+[1] FALSE
+
+Warnmeldung:
+In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE,  :
+  es gibt kein Paket namens ‘knockoff’
+> 
+> # load necessary functions
+> source('data_generation/IV_code/fn_2SLS.R')
+> source('data_generation/IV_code//estimate_kappa_bootstrap_wrapper.R')
+> source('data_generation/IV_code//fn_complement.R')
+> source('data_generation/IV_code//fn_complement_knockoff.R')
+> source('data_generation/IV_code//fn_test_instrument_validity.R')
+> source('data_generation/IV_code//estimate_confounding_via_kernel_smoothing.R')
+> source('data_generation/IV_code//estimate_confounding_sigmas.R')
+> source('data_generation/IV_code//estimate_confounding_via_kernel_smoothing.R')
+> source('data_generation/IV_code//estimate_confounding_sigmas.R')
+> 
+> #get_yes_or_no <- function(simulation) {
+> #  repeat {
+> #    user_input <- tolower(trimws(readline(prompt = paste0("Do you want do calculate to run the IV test for ", simulation, ". Please enter 'yes' or 'no': "))))
+> #    if (user_input %in% c("yes", "no")) {
+> #      return(user_input)
+> #    } else {
+> #      cat("Invalid input. Please type 'yes' or 'no'.\n")
+> #    }
+> #  }
+> #}
+> 
+> # this line imports the iv_test_generation.R file implementing the calculate_iv_values function for each setting
+> 
+> 
+> ### specify the simulation that needs to be run ###############
+> simulation = "differen_sample_sizes"
+> ###########################
+> 
+> source(paste0("data_generation/" , simulation,"/iv_test_generation.R" ))
+> 
+> #B number of datasets, can be reduced to test the pipline
+> B =100
+> 
+> 
+> #if (get_yes_or_no(simulation) == "yes") {
+>   start_time <- Sys.time()
+>   calculate_iv_values(B = B)
