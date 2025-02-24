@@ -7,22 +7,6 @@
 
 rm(list = ls()) # To clear all
 
-options(repos = c(CRAN = "https://cloud.r-project.org"))
-
-#### define the simulation #######################
-lib_path <- file.path("..", "..", "R_libs")
-
-# Create the directory if it doesn't exist
-if (!dir.exists(lib_path)) {
-  dir.create(lib_path, recursive = TRUE)
-}
-
-install.packages("knockoff", lib = lib_path)
-install.packages("pracma", lib = lib_path)
-install.packages("MASS", lib = lib_path)
-install.packages("corpcor", lib = lib_path)
-install.packages("boot", lib = lib_path)
-install.packages("parallel", lib = lib_path)
 
 
 # load required packages
@@ -36,15 +20,15 @@ packages <- c("boot",
 lapply(packages,require,character.only=TRUE)
 
 # load necessary functions
-source('IV_code/fn_2SLS.R')
-source('IV_code//estimate_kappa_bootstrap_wrapper.R')
-source('IV_code//fn_complement.R')
-source('IV_code//fn_complement_knockoff.R')
-source('IV_code//fn_test_instrument_validity.R')
-source('IV_code//estimate_confounding_via_kernel_smoothing.R')
-source('IV_code//estimate_confounding_sigmas.R')
-source('IV_code//estimate_confounding_via_kernel_smoothing.R')
-source('IV_code//estimate_confounding_sigmas.R')
+source('data_generation/IV_code/fn_2SLS.R')
+source('data_generation/IV_code//estimate_kappa_bootstrap_wrapper.R')
+source('data_generation/IV_code//fn_complement.R')
+source('data_generation/IV_code//fn_complement_knockoff.R')
+source('data_generation/IV_code//fn_test_instrument_validity.R')
+source('data_generation/IV_code//estimate_confounding_via_kernel_smoothing.R')
+source('data_generation/IV_code//estimate_confounding_sigmas.R')
+source('data_generation/IV_code//estimate_confounding_via_kernel_smoothing.R')
+source('data_generation/IV_code//estimate_confounding_sigmas.R')
 
 #get_yes_or_no <- function(simulation) {
 #  repeat {
@@ -64,10 +48,10 @@ source('IV_code//estimate_confounding_sigmas.R')
 simulation = "differen_sample_sizes"
 ###########################
 
-source(paste0("" , simulation,"/iv_test_generation.R" ))
+source(paste0("data_generation/" , simulation,"/iv_test_generation.R" ))
 
 #B number of datasets, can be reduced to test the pipline
-B =1
+B =100
 
 
 #if (get_yes_or_no(simulation) == "yes") {
