@@ -1,7 +1,7 @@
 source("data_generation/IV_code/helper.R")
 library(progress)
 Bootstraps = 250 # number of bootstrap draws
-ncpus = 30
+ncpus = 10
 J = 9
 
 synthetic_D_method = 'standard'
@@ -24,7 +24,6 @@ p_values_ = function(method, n, B,J){
     clear = FALSE, 
     width = 60
   )
-  
   for (i in 0:(B-1)) {
     dt_path = get_path("data_generation/differen_sample_sizes/data/data_obs_n:", n, i)
     sg_path = get_path(paste0("data_generation/differen_sample_sizes/data/estimated_signals_", method ,"_n:"), n, i)
@@ -32,7 +31,11 @@ p_values_ = function(method, n, B,J){
     signals = read.csv(sg_path, header = 1) 
     ordered_data = order_data(data)
     results[i+1,1] = i
-    results[i+1,2:ncol(results)] = p_values(ordered_data, signals)
+    if(method == "VarEM" & i ==23){
+      results[i+1,2:ncol(results)] = NA
+    } else{
+      results[i+1,2:ncol(results)] = p_values(ordered_data, signals)
+    }
     pb$tick()
   }
   return(results)
@@ -67,7 +70,7 @@ p_values_true_sources = function(n, B,J){
 
 calculate_iv_values = function(B){
   
-  ns = c(1000,5000,10000)
+  ns = c(5000)
 
   methods = cbind("VarEM", "CausalVarEM")
   
@@ -82,6 +85,5 @@ calculate_iv_values = function(B){
   }
   
 }
-
 
 

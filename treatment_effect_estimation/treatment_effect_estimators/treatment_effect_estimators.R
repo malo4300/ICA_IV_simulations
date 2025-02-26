@@ -84,6 +84,33 @@ estimated_confounder_index_v2 = function(p_values_iv,p_values_indp){
   return(final_candidates)
 }
 
+estimate_treatment_index = function(p_values_iv,p_values_indp){
+  
+  # for the independence test, the only not independent sources should be the treatment and confounder source, pick the smallest two p-values if unique
+  
+  ordered_p_values =  sort(as.numeric(p_values_indp))
+  if(ordered_p_values[2] == ordered_p_values[3]){
+    warning("Independence test return non-unique candidates for treatment and confounde source")
+  }
+  
+  candidates = which(ordered_p_values[2]  >= as.numeric(p_values_indp))
+  
+  # find the max p-values for the candidates and remove this 
+  
+  mn = min(p_values_iv[candidates])
+  
+  final_candidates = candidates[p_values_iv[candidates] != mn] 
+  
+  if(length(final_candidates)>1){
+    warning("Final candidate not unique")
+  }
+  if(length(final_candidates) == 0){
+    warning("No candidate: return NA")
+    return(NA)
+  }
+  return(final_candidates)
+}
+
 
 online_extraction = function(p_values_indp, data_obs, signals){
   ordered_p_values =  sort(as.numeric(p_values_indp))
@@ -135,13 +162,9 @@ online_extraction = function(p_values_indp, data_obs, signals){
 
 estimated_treatmet_and_outcome_ind = function(p_values_iv,p_values_indp_undcond){
   
-  # for the independence test, the only not independent sources should be the treatment and confounded source, pick the smallest two p-values if unique
-  
-  
-  candidate_outcome=  which.min(as.numeric(p_values_indp_undcond))
+
+  candidate_outcome=  which.max(as.numeric(p_values_indp_undcond))
   candidate_treatment = which.max(as.numeric(p_values_iv))
-  # find the max p-values for the candidates and remove this 
-  
   
   if(candidate_outcome == candidate_treatment) {
     warning("Final candidates are the same")
@@ -185,3 +208,21 @@ rmse = function(true_treatment_effect, estimated_treatment_efect){
 }
 
 
+
+
+non_sense_method = function(p_values_iv,p_values_indp_undcond){
+  
+  # for the independence test, the only not independent sources should be the treatment and confounded source, pick the smallest two p-values if unique
+  
+  
+  candidate_outcome=  which.min(as.numeric(p_values_indp_undcond))
+  candidate_treatment = which.max(as.numeric(p_values_iv))
+  # find the max p-values for the candidates and remove this 
+  
+  if(candidate_outcome == candidate_treatment) {
+    warning("Final candidates are the same")
+    
+  }
+  
+  return(c(candidate_outcome,candidate_treatment ))
+}
