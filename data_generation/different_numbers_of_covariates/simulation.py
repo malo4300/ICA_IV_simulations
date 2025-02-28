@@ -43,6 +43,7 @@ def calculate_p_values(conditional_function, unconditional_function):
 
     for method in methods:
         for covs in number_of_covariates:
+            J  = 3+covs
             p_values_unconditional = np.ones((B,J))
             p_values_conditional = np.ones((B,J))
            
