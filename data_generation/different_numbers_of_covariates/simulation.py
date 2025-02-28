@@ -3,9 +3,9 @@ import pandas as pd
 import numpy as np
 import fcit
 
-B = 1
-n = 100
-iter = 1
+B = 100
+n = 1000
+iter = 100
 
 number_of_covariates = [3,6,9]
 
