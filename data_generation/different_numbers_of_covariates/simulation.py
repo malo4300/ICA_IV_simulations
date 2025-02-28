@@ -4,7 +4,7 @@ import numpy as np
 import fcit
 
 B = 1
-n = 1
+n = 100
 iter = 1
 
 number_of_covariates = [3,6,9]
