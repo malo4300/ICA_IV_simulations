@@ -30,22 +30,22 @@ source('data_generation/IV_code//estimate_confounding_sigmas.R')
 source('data_generation/IV_code//estimate_confounding_via_kernel_smoothing.R')
 source('data_generation/IV_code//estimate_confounding_sigmas.R')
 
-#get_yes_or_no <- function(simulation) {
-#  repeat {
-#    user_input <- tolower(trimws(readline(prompt = paste0("Do you want do calculate to run the IV test for ", simulation, ". Please enter 'yes' or 'no': "))))
-#    if (user_input %in% c("yes", "no")) {
-#      return(user_input)
-#    } else {
-#      cat("Invalid input. Please type 'yes' or 'no'.\n")
-#    }
-#  }
-#}
+get_yes_or_no <- function(simulation) {
+  repeat {
+    user_input <- tolower(trimws(readline(prompt = paste0("Do you want do calculate to run the IV test for ", simulation, ". Please enter 'yes' or 'no': "))))
+    if (user_input %in% c("yes", "no")) {
+      return(user_input)
+    } else {
+      cat("Invalid input. Please type 'yes' or 'no'.\n")
+  }
+  }
+}
 
 # this line imports the iv_test_generation.R file implementing the calculate_iv_values function for each setting
 
 
 ### specify the simulation that needs to be run ###############
-simulation = "differen_sample_sizes"
+simulation = "different_numbers_of_covariates"
 ###########################
 
 source(paste0("data_generation/" , simulation,"/iv_test_generation.R" ))
@@ -54,16 +54,16 @@ source(paste0("data_generation/" , simulation,"/iv_test_generation.R" ))
 B =100
 
 
-#if (get_yes_or_no(simulation) == "yes") {
+if (get_yes_or_no(simulation) == "yes") {
   start_time <- Sys.time()
   calculate_iv_values(B = B)
   end_time <- Sys.time()
   time_taken <- as.numeric(difftime(end_time, start_time, units = "hours"))
   print(paste("Time taken:", time_taken, "hours"))
 
-#} else {
-#  cat("Operation canceled.\n")
-#}
+} else {
+  cat("Operation canceled.\n")
+}
 
 
 

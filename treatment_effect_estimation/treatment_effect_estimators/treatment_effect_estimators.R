@@ -226,3 +226,190 @@ non_sense_method = function(p_values_iv,p_values_indp_undcond){
   
   return(c(candidate_outcome,candidate_treatment ))
 }
+
+iv_only = function(p_values_iv){
+  mx = max(p_values_iv)
+  
+  if (sum(p_values_iv == mx)> 1){
+    warning("Final candidate not unique")
+    
+  }
+  return(which(p_values_iv == mx))
+}
+
+
+
+
+iv_only_estimation = function(cand_source_iv_only){
+  ind = which(sapply(cand_source_iv_only, function(x) length(x) == 1))
+  
+  l = length(ind)
+  print(l)
+  
+  
+  
+  true_treatment_effect_iv_only = rep(0,l)
+  iv_only_effect = rep(NA,l)
+  ols_biased = rep(NA,l)
+  estimated_treatment_efect_column_extraction = rep(NA,l)
+  level_of_confounding = rep(NA, l)
+  
+  
+  for (i in 1:l){
+    seed = ind[i]-1
+    indx = ind[i]
+    signals = get_signals(seed)
+    data = get_data(seed)
+    remove = unlist(cand_source_iv_only[indx])
+    df = data.frame(y = data[,I], treatment = data[, treatment_col], sign = signals[,-remove])
+    fit = lm(y~.-1,df)  
+    iv_only_effect[i] = coef(fit)["treatment"] 
+    true_mm = get_true_mixing_matrix(seed)
+    true_treatment_effect_iv_only[i] = column_extraction(true_mm)
+    ols_biased[i] = classic_ols(data)
+    mm = get_estimated_mixing_matrix(seed)
+    estimated_treatment_efect_column_extraction[i] = column_extraction(mm)
+    level_of_confounding[i] = get_level_of_confounding(true_mm)
+    
+  }
+  return(data.frame(ind,
+                    true_treatment_effect_iv_only,
+               iv_only_effect,
+               ols_biased,
+               estimated_treatment_efect_column_extraction,
+               level_of_confounding))
+}
+
+
+
+remove_two_treatment_estimtaion = function(cand_source_non_sense){
+  
+  
+  ind = which(sapply(cand_source_non_sense, function(x) x[1] != x[2]))
+  
+  l = length(ind)
+  print(l)
+  
+  
+  true_treatment_effect_nonsense = rep(0,l)
+  effect_est = rep(NA,l)
+  ols_biased = rep(NA,l)
+  estimated_treatment_efect_column_extraction = rep(NA,l)
+  level_of_confounding = rep(NA, l)
+  
+  
+  for (i in 1:l){
+    seed = ind[i]-1
+    indx = ind[i]
+    signals = get_signals(seed)
+    data = get_data(seed)
+    remove = unlist(cand_source_non_sense[indx])
+    df = data.frame(y = data[,I], treatment = data[, treatment_col], sign = signals[,-remove])
+    fit = lm(y~.-1,df)  
+    effect_est[i] = coef(fit)["treatment"] 
+    true_mm = get_true_mixing_matrix(seed)
+    true_treatment_effect_nonsense[i] = column_extraction(true_mm)
+    ols_biased[i] = classic_ols(data)
+    mm = get_estimated_mixing_matrix(seed)
+    estimated_treatment_efect_column_extraction[i] = column_extraction(mm)
+    level_of_confounding[i] = get_level_of_confounding(true_mm)
+    
+  }  
+  return(data.frame(
+    ind,
+    true_treatment_effect_nonsense ,
+    effect_est ,
+    ols_biased ,
+    estimated_treatment_efect_column_extraction ,
+    level_of_confounding 
+  ))
+}
+
+
+remove_treatment_and_outcome_estimation = function(cand_source_idx){
+  ind = which(sapply(cand_source_idx, function(x) x[1] != x[2]))
+  
+  l = length(ind)
+  print(l)
+  
+  
+  true_treatment_effect_confounder_idx = rep(0,l)
+  estimated_treatment_efect_source_idx = rep(NA,l)
+  ols_biased = rep(NA,l)
+  estimated_treatment_efect_column_extraction = rep(NA,l)
+  level_of_confounding = rep(NA, l)
+  
+  
+  
+  for (i in 1:l){
+    seed = ind[i]-1
+    indx = ind[i]
+    signals = get_signals(seed)
+    data = get_data(seed)
+    remove = unlist(cand_source_idx[indx])
+    df = data.frame(y = data[,I], treatment = data[, treatment_col], sign = signals[,-remove])
+    fit = lm(y~.-1,df)  
+    estimated_treatment_efect_source_idx[i] = coef(fit)["treatment"] 
+    true_mm = get_true_mixing_matrix(seed)
+    true_treatment_effect_confounder_idx[i] = column_extraction(true_mm)
+    ols_biased[i] = classic_ols(data)
+    mm = get_estimated_mixing_matrix(seed)
+    estimated_treatment_efect_column_extraction[i] = column_extraction(mm)
+    level_of_confounding[i] = get_level_of_confounding(true_mm)
+    
+  }  
+  
+  return(data.frame(
+    ind, 
+    
+    true_treatment_effect_confounder_idx ,
+    estimated_treatment_efect_source_idx ,
+    ols_biased ,
+    estimated_treatment_efect_column_extraction ,
+    level_of_confounding
+  ))
+  
+}
+
+
+finding_confounder_source_estimation= function(cand_confounder_idx){
+  ind = which(sapply(cand_confounder_idx, function(x) length(x) == 1 && !is.na(x)))
+  
+  l = length(ind)
+  print(l)
+  
+  true_treatment_effect_confounder_idx = rep(0,l)
+  estimated_treatment_efect_confounder_idx = rep(NA,l)
+  ols_biased = rep(NA,l)
+  estimated_treatment_efect_column_extraction = rep(NA,l)
+  level_of_confounding = rep(NA, l)
+  
+  
+  
+  for (i in 1:l){
+    seed = ind[i]-1
+    indx = ind[i]
+    signals = get_signals(seed)
+    data = get_data(seed)
+    confounder_source_col = as.numeric(cand_confounder_idx[indx])
+    df = data.frame(y = data[,I], treatment = data[, treatment_col], data[,c(-treatment_col, -I)], conf = signals[,confounder_source_col])
+    fit = lm(y~.-1,df)  
+    estimated_treatment_efect_confounder_idx[i] = coef(fit)["treatment"] 
+    true_mm = get_true_mixing_matrix(seed)
+    true_treatment_effect_confounder_idx[i] = column_extraction(true_mm)
+    ols_biased[i] = classic_ols(data)
+    mm = get_estimated_mixing_matrix(seed)
+    estimated_treatment_efect_column_extraction[i] = column_extraction(mm)
+    level_of_confounding[i] = get_level_of_confounding(true_mm)
+  }  
+  
+  return(data.frame(
+    ind,
+    true_treatment_effect_confounder_idx ,
+    estimated_treatment_efect_confounder_idx ,
+    ols_biased ,
+    estimated_treatment_efect_column_extraction ,
+    level_of_confounding
+    
+  ))
+}

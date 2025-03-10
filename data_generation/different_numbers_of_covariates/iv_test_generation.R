@@ -1,9 +1,8 @@
 library(progress)
 source("data_generation/IV_code/helper.R")
-Bootstraps = 1 # number of bootstrap draws
-ncpus = 12
-J = 9
-n = 1
+Bootstraps = 200 # number of bootstrap draws
+ncpus = 10
+n = 1000
 synthetic_D_method = 'standard'
 kappa_method = 'sigmas'
 
@@ -27,8 +26,8 @@ p_values_ = function(method, covs, B,J){
   )
   
   for (i in 0:(B-1)) {
-    dt_path = get_path("data_generation/different_numbers_of_covariates/data/data_obs_large_covs_", covs, i)
-    sg_path = get_path(paste0("data_generation/different_numbers_of_covariates/data/estimated_signals_", method ,"_large_covs_"), covs, i)
+    dt_path = get_path("data_generation/different_numbers_of_covariates/data/data_obs_covs_", covs, i)
+    sg_path = get_path(paste0("data_generation/different_numbers_of_covariates/data/estimated_signals_", method ,"_covs_"), covs, i)
     data =  read.csv(dt_path, header = 1)
     signals = read.csv(sg_path, header = 1) 
     ordered_data = order_data(data)
@@ -50,8 +49,8 @@ p_values_true_sources = function(covs, B,J){
   )
   
   for (i in 0:(B-1)) {
-    sg_path = get_path("data_generation/different_numbers_of_covariates/data/true_signals_large_covs_", covs, i) 
-    dt_path = get_path("data_generation/different_numbers_of_covariates/data/data_obs_large_covs_", covs, i)
+    sg_path = get_path("data_generation/different_numbers_of_covariates/data/true_signals_covs_", covs, i) 
+    dt_path = get_path("data_generation/different_numbers_of_covariates/data/data_obs_covs_", covs, i)
     data =  read.csv(dt_path, header = 1)
     signals = read.csv(sg_path, header = 1)  +  matrix(rnorm(n*J,0,.1), n,J) # required for IV test to run
     ordered_data = order_data(data)
@@ -68,11 +67,12 @@ p_values_true_sources = function(covs, B,J){
 
 calculate_iv_values = function(B){
   
-  different_numbers_of_covariates = c(3,6,9)
+  covs = c(3,6,9)
 
   methods = cbind("VarEM", "CausalVarEM")
   
-  for (i in 1:length(different_numbers_of_covariates)) {
+  for (i in 1:length(covs  )) {
+    J = 3 + covs[i]
     for (j in 1:length(methods)) {
       results = p_values_(method = methods[j], covs = covs[i], B, J)
       write.csv(results, file = paste0("data_generation/different_numbers_of_covariates/", methods[j], "_covs_", covs[i], ".csv"))
