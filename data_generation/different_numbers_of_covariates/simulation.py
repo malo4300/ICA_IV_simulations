@@ -41,23 +41,25 @@ def calculate_p_values(conditional_function, unconditional_function):
     print("calculate_p_values")
     methods = ["VarEM","CausalVarEM"]
 
-    for method in methods:
-        for covs in number_of_covariates:
-            J  = 3+covs
-            p_values_unconditional = np.ones((B,J))
-            p_values_conditional = np.ones((B,J))
-           
-            for i in tqdm(range(B)):
-                data = pd.read_csv(f"different_numbers_of_covariates/data/data_obs_covs_{covs}_{i}.csv", header=0).values
-                signals = pd.read_csv(f"different_numbers_of_covariates/data/estimated_signals_{method}_covs_{covs}_{i}.csv", header=0).values
-                p_values_unconditional[i,:] = unconditional_function(data, signals, n, J)
-                p_values_conditional[i,:] = conditional_function(data, signals, n, J)
-            
-        
-            pd.DataFrame(p_values_unconditional).reset_index().to_csv(f"different_numbers_of_covariates/p_values_unconditional_{method}_covs_{covs}.csv", header=False, index = False)
-            pd.DataFrame(p_values_conditional).reset_index().to_csv(f"different_numbers_of_covariates/p_values_conditional_{method}_covs_{covs}.csv", header=False, index = False)
-    for cov in number_of_covariates:
-        J = 3+cov
+    #for method in methods:
+    #    for covs in number_of_covariates:
+    #        J  = 3+covs
+    #        p_values_unconditional = np.ones((B,J))
+    #        p_values_conditional = np.ones((B,J))
+    #       
+    #        for i in tqdm(range(B)):
+    #            data = pd.read_csv(f"different_numbers_of_covariates/data/data_obs_covs_{covs}_{i}.csv", header=0).values
+    #            signals = pd.read_csv(f"different_numbers_of_covariates/data/estimated_signals_{method}_covs_{covs}_{i}.csv", header=0).values
+    #            p_values_unconditional[i,:] = unconditional_function(data, signals, n, J)
+    #            p_values_conditional[i,:] = conditional_function(data, signals, n, J)
+    #        
+    #    
+    #        pd.DataFrame(p_values_unconditional).reset_index().to_csv(f"different_numbers_of_covariates/p_values_unconditional_{method}_covs_{covs}.csv", header=False, index = False)
+    #        pd.DataFrame(p_values_conditional).reset_index().to_csv(f"different_numbers_of_covariates/p_values_conditional_{method}_covs_{covs}.csv", header=False, index = False)
+#
+    print("calculate_p_values_true_signals")
+    for covs in number_of_covariates:
+        J = 3+covs
         I = J-1
         p_values_conditional_true_signals = np.ones((B,J))
         p_values_unconditional_true_signals = np.ones((B,J))

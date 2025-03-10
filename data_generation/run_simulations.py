@@ -13,7 +13,7 @@ from different_numbers_of_covariates.simulation import create_ICA_output as crea
 if __name__ == "__main__":
     # Run the simulation stop the time
     start = time.time()
-    create_ICA_output_differen_covariates(CausalVarEM, dgp_extended)
+    #create_ICA_output_differen_covariates(CausalVarEM, dgp_extended)
     calculate_p_values_differen_covariates(p_vals_conditional, p_vals_unconditional)
     end = time.time()
     print("Time taken: ", (end - start)/3600, "hours")
