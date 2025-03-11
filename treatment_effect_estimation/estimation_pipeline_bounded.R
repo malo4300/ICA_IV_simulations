@@ -8,7 +8,7 @@ I = J-1
 treatment_col = I-1 # by construction
 
 get_signals = function(seed){
-    read.csv(get_path("data_generation/bounded_treatment_effect/data/estimated_signals_CausalVarEM_init_flipp_", seed))
+    read.csv(get_path("data_generation/bounded_treatment_effect/data/true_signals_init_flipp_", seed))
 }
 get_estimated_mixing_matrix = function(seed){
   read.csv(paste("data_generation/bounded_treatment_effect/data/estimated_mixing_CausalVarEM_init_flipp_", seed, ".csv", sep = ""))
@@ -27,9 +27,9 @@ save_treatment_estimation = function(list_of_df, name){
 
 
 
-p_values_iv = read.csv("data_generation/bounded_treatment_effect/CausalVarEM.csv",  row.names = 1)[-1]
-p_values_indp_cond = read.csv("data_generation/bounded_treatment_effect/p_values_conditional_CausalVarEM.csv", row.names = NULL, header=FALSE)[-1]
-p_values_indp_undcond = read.csv("data_generation/bounded_treatment_effect/p_values_unconditional_CausalVarEM.csv" ,header= FALSE)[-1]
+p_values_iv = read.csv("data_generation/bounded_treatment_effect/true_source.csv",  row.names = 1)[-1]
+p_values_indp_cond = read.csv("data_generation/bounded_treatment_effect/p_values_conditional_true_signals.csv", row.names = NULL, header=FALSE)[-1]
+p_values_indp_undcond = read.csv("data_generation/bounded_treatment_effect/p_values_unconditional_true_signals.csv" ,header= FALSE)[-1]
 
 
 
@@ -42,7 +42,7 @@ cand_source_iv_only =vector("list", 100)
 
 
 for (i in 1:100) {
-  candidates <- estimated_confounder_index_v2(p_values_iv[i,], p_values_indp_cond[i,])
+  candidates <- estimated_confounder_index(p_values_iv[i,], p_values_indp_cond[i,])
   cand_confounder_idx[[i]] <- candidates
   candidates <- estimated_treatmet_and_outcome_ind(p_values_iv[i,], p_values_indp_undcond[i,])
   cand_source_idx[[i]] <- candidates
@@ -87,7 +87,7 @@ save_treatment_estimation(list(seed = ind-1,
                               estimated_treatment_using_confounder_source = estimated_treatment_efect_confounder_idx,
                               ols_biased = ols_biased,
                              column_extraction = estimated_treatment_efect_column_extraction,
-                            level_of_confounding = level_of_confounding), "CausalVarEM_confounder_source_bounded_treatment")
+                            level_of_confounding = level_of_confounding), "true_sources_confounder_source_bounded_treatment")
 
 
 ##############################
@@ -128,7 +128,7 @@ save_treatment_estimation(list(seed = ind-1,
                              estimated_treatment_on_sources = estimated_treatment_efect_source_idx,
                             ols_biased = ols_biased,
                            column_extraction = estimated_treatment_efect_column_extraction,
-                          level_of_confounding = level_of_confounding), "CausalVarEM_7_sources_bounded_treatment")
+                          level_of_confounding = level_of_confounding), "true_sources_7_sources_bounded_treatment")
 
 
 
@@ -163,7 +163,7 @@ save_treatment_estimation(list(seed = ind-1,
                                mistaken_scheme = two_treatment_effect,
                                ols_biased = ols_biased,
                                column_extraction = estimated_treatment_efect_column_extraction,
-                               level_of_confounding = level_of_confounding), paste("CausalVarEM_7_sources_nonsense_bounded_treatment"))
+                               level_of_confounding = level_of_confounding), paste("true_sources_7_sources_nonsense_bounded_treatment"))
 
 
 
@@ -202,4 +202,4 @@ save_treatment_estimation(list(seed = ind-1,
                                iv_only_effect = iv_only_effect,
                                ols_biased = ols_biased,
                                column_extraction = estimated_treatment_efect_column_extraction,
-                               level_of_confounding = level_of_confounding), paste("CausalVarEM_iv_only_bounded" ))
+                               level_of_confounding = level_of_confounding), paste("true_sources_iv_only_bounded" ))

@@ -7,7 +7,7 @@ treatment_col = I-1 # by construction
 
 
 get_signals = function(seed){
-  read.csv(get_path(paste0("data_generation/different_confounding_levels/data/estimated_signals_CausalVarEM_large_conf_", conf, "_"), seed))
+  read.csv(get_path(paste0("data_generation/different_confounding_levels/data/true_signals_large_conf_", conf, "_"), seed))
 }
 get_estimated_mixing_matrix = function(seed){
   read.csv(paste0("data_generation/different_confounding_levels/data/estimated_mixing_CausalVarEM_large_conf_", conf, "_", seed, ".csv"))
@@ -27,9 +27,9 @@ save_treatment_estimation = function(list_of_df, name){
 }
 
 
-p_values_iv = read.csv(paste("data_generation/different_confounding_levels/CausalVarEM_conf_",conf,".csv", sep = ""), row.names = 1)[-1]
-p_values_indp_cond = read.csv(paste("data_generation/different_confounding_levels/p_values_conditional_CausalVarEM_",conf,".csv", sep = ""), row.names = NULL, header= FALSE)[-1]
-p_values_indp_undcond = read.csv(paste("data_generation/different_confounding_levels/p_values_unconditional_CausalVarEM_", conf, ".csv", sep = "") ,header= FALSE)[-1]
+p_values_iv = read.csv(paste("data_generation/different_confounding_levels/true_source_conf_",conf,".csv", sep = ""), row.names = 1)[-1]
+p_values_indp_cond = read.csv(paste("data_generation/different_confounding_levels/p_values_conditional_true_sources_",conf,".csv", sep = ""), row.names = NULL, header= FALSE)[-1]
+p_values_indp_undcond = read.csv(paste("data_generation/different_confounding_levels/p_values_unconditional_true_sources_", conf, ".csv", sep = "") ,header= FALSE)[-1]
 
 
 cand_confounder_idx <- vector("list", 100)
@@ -41,9 +41,9 @@ cand_source_iv_only =vector("list", 100)
 
 
 for (i in 1:100) {
-  candidates <- estimated_confounder_index_v2(p_values_iv[i,], p_values_indp_cond[i,])
+  candidates <- estimated_confounder_index_proper_test(p_values_iv[i,], p_values_indp_cond[i,])
   cand_confounder_idx[[i]] <- candidates
-  candidates <- estimated_treatmet_and_outcome_ind(p_values_iv[i,], p_values_indp_undcond[i,])
+  candidates <- estimated_treatmet_and_outcome_ind_proper_test(p_values_iv[i,], p_values_indp_undcond[i,])
   cand_source_idx[[i]] <- candidates
   candidates <- non_sense_method(p_values_iv[i,], p_values_indp_undcond[i,])
   cand_source_non_sense[[i]] <- candidates
@@ -80,7 +80,7 @@ rmse(true_treatment_effect_confounder_idx, estimated_treatment_efect_column_extr
 mean(abs(true_treatment_effect_confounder_idx-estimated_treatment_efect_confounder_idx))
 mean(abs(true_treatment_effect_confounder_idx-ols_biased))
 
-save_treatment_estimation(list(seed = ind-1,
+#save_treatment_estimation(list(seed = ind-1,
                                true_treatment_effect = true_treatment_effect_confounder_idx,
                                estimated_treatment_using_confounder_source = estimated_treatment_efect_confounder_idx,
                                ols_biased = ols_biased,
@@ -118,7 +118,7 @@ mean(abs(true_treatment_effect_confounder_idx-ols_biased))
 
 
 
-save_treatment_estimation(list(seed = ind-1,
+#save_treatment_estimation(list(seed = ind-1,
                                true_treatment_effect = true_treatment_effect_confounder_idx,
                                estimated_treatment_on_sources = estimated_treatment_efect_source_idx,
                               ols_biased = ols_biased,

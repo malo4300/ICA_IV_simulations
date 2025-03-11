@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
 
 def calc_error(df):
     """
@@ -109,3 +110,34 @@ def print_method_summary(method_summary):
         cases = method_summary[level]["cases"].values()
 
         print(pd.DataFrame([method_summary[level]["rmse"], method_summary[level]["mae"], method_summary[level]["std"], cases], columns=col, index=["RMSE", "MAE", "STD", "Cases"]))
+
+
+
+def plot_cases_vs_performance(method_summary, metric, simulation):
+    fig, ax = plt.subplots(1, 3, figsize=(15, 5), sharey=True)
+
+
+  
+
+
+    for i, level in enumerate(method_summary.keys()):
+        methods = method_summary[level]["cases"].keys()
+        cases = method_summary[level]["cases"].values()
+        rmse = method_summary[level][metric]
+        palette = sns.color_palette("Set1", n_colors=len(methods))
+
+        ax[i].scatter(cases, rmse, c=palette, label=methods)
+    
+
+        ax[i].set_title(f"{simulation}: {level}")
+
+
+    legend_labels = list(methods)
+    legend_colors = palette[:len(legend_labels)]
+    handles = [plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=color, markersize=10) for color in legend_colors]
+
+
+    fig.legend(handles, legend_labels, loc='upper center', ncol=len(legend_labels), bbox_to_anchor=(0.5, 1.1))
+    plt.tight_layout()
+
+    plt.show()

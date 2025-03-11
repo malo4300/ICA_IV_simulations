@@ -25,39 +25,9 @@ get_path = function(str, i){
 
 
 
+
+
 estimated_confounder_index = function(p_values_iv,p_values_indp){
-  # IV test should reject all sources as potential instruments leaving only the treatment source 
-  # in practice pick the largest value if it is unique
-  mx = max(p_values_iv)
-  ind_iv_max = which(p_values_iv == mx)
-  if(length(ind_iv_max)>1){
-    warning("IV test has selcted non-unique candidate for treatment source")
-  }
-  
-  # for the independence test, the only not independent sources should be the treatment and confounder source, pick the smallest two p-values if unique
-  
-  ordered_p_values =  sort(as.numeric(p_values_indp))
-  if(ordered_p_values[2] == ordered_p_values[3]){
-    warning("Independence test return non-unique candidates for treatment and confounde source")
-  }
-  
-  candidates = which(ordered_p_values[2]  >= as.numeric(p_values_indp))
-
-  # remove the source selected by the IV test
-  final_candidate = candidates[!candidates %in% ind_iv_max]
-  
-  if(length(final_candidate)>1){
-    warning("Final candidate not unique")
-  }
-  if(length(final_candidate) == 0){
-    warning("No candidate: return NA")
-    return(NA)
-  }
-  return(final_candidate)
-}
-
-
-estimated_confounder_index_v2 = function(p_values_iv,p_values_indp){
   
   # for the independence test, the only not independent sources should be the treatment and confounder source, pick the smallest two p-values if unique
   
@@ -84,80 +54,26 @@ estimated_confounder_index_v2 = function(p_values_iv,p_values_indp){
   return(final_candidates)
 }
 
-estimate_treatment_index = function(p_values_iv,p_values_indp){
+estimated_confounder_index_proper_test = function(p_values_iv,p_values_indp){
   
-  # for the independence test, the only not independent sources should be the treatment and confounder source, pick the smallest two p-values if unique
-  
-  ordered_p_values =  sort(as.numeric(p_values_indp))
-  if(ordered_p_values[2] == ordered_p_values[3]){
-    warning("Independence test return non-unique candidates for treatment and confounde source")
-  }
-  
-  candidates = which(ordered_p_values[2]  >= as.numeric(p_values_indp))
-  
-  # find the max p-values for the candidates and remove this 
-  
-  mn = min(p_values_iv[candidates])
-  
-  final_candidates = candidates[p_values_iv[candidates] != mn] 
-  
-  if(length(final_candidates)>1){
-    warning("Final candidate not unique")
-  }
-  if(length(final_candidates) == 0){
-    warning("No candidate: return NA")
+  candidates = which(p_values_indp <.05)
+    
+  if (length(candidates) != 2) {
+    warning("Independence test did not return exactly 2 significant p-values")
     return(NA)
   }
-  return(final_candidates)
-}
-
-
-online_extraction = function(p_values_indp, data_obs, signals){
-  ordered_p_values =  sort(as.numeric(p_values_indp))
-  if(ordered_p_values[2] == ordered_p_values[3]){
-    warning("Independence test return non-unique candidates for treatment and confounde source")
+  
+  out_idx = candidates[p_values_iv[candidates] <.05]
+  
+  if (length(out_idx) != 1) {
+    warning("IV test did not return exactly one siginifcant p-value for the proposed candidates")
+    return(NA)
   }
-  
-  candidates = which(ordered_p_values[2]  >= as.numeric(p_values_indp))
-  
-  # run iv test for the candidates an 
-  
-
-  order_data = function(data){
-    ordered_data = matrix(0, nrow = nrow(data), ncol = ncol(data))
-    ordered_data[,1] = data[, ncol(data)] # Y has to be the first column, in data it is the last
-    ordered_data[,2:(ncol(data)-1)] = as.matrix(data[,1:(ncol(data)-2)]) # controls in the middle
-    ordered_data[,ncol(data)] = data[, ncol(data)-1] # Treatment as last
-    return(ordered_data)
-  }
-  
-  
- 
-  
-  B = 250 # number of bootstrap draws
-  ncpus = 10
-  synthetic_D_method = 'standard'
-  kappa_method = 'sigmas'
-  
-  p_values = function(ordered_data, signals){
-    p_val = rep(0,ncol(signals))
-    for (i in 1:ncol(signals)) {
-      p_val[i] = fn_test_instrument_validity(ordered_data, signals[[names(signals)[i]]], B, 
-                                             ncpus, 
-                                             kappa_method,
-                                             synthetic_D_method)$pseudo_p
-    }
-    return(p_val)
-  }
-  ordered_data = order_data(data_obs)
-  p_vals = p_values(ordered_data = ordered_data , signals[candidates])
-  mn = min(p_vals)
-  if (sum(p_vals == mn)> 1){
-    warning("Final candidate not unique")
+  return(out_idx)
     
-  }
-  return(candidates[p_vals == mn])
 }
+
+
 
 
 estimated_treatmet_and_outcome_ind = function(p_values_iv,p_values_indp_undcond){
@@ -172,6 +88,30 @@ estimated_treatmet_and_outcome_ind = function(p_values_iv,p_values_indp_undcond)
   }
   
   return(c(candidate_outcome,candidate_treatment ))
+}
+
+
+
+estimated_treatmet_and_outcome_ind_proper_test = function(p_values_iv,p_values_indp_undcond){
+  
+  outcome_idx = which(p_values_indp_undcond>.05)
+  if (length(outcome_idx)!=1) {
+    warning("Independence test did not return exactly 1 significant p-values")
+    return(NA)
+  }
+  
+  conf_index = which(p_values_iv>.05)
+  if (length(conf_index)!=1) {
+    warning("IV test did not return exactly one siginifcant p-value for the proposed candidates")
+    return(NA)
+  }
+  if(outcome_idx == conf_index) {
+    warning("Final candidates are the same")
+    return(NA)
+    
+  }
+  return(c(outcome_idx,conf_index))
+  
 }
 
 classic_ols = function(data_obsorved){

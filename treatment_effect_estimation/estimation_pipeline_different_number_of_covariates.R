@@ -1,6 +1,6 @@
 source("treatment_effect_estimation/treatment_effect_estimators/treatment_effect_estimators.R")
 
-no_of_covs = 3 # 3, 6, or 9
+no_of_covs = 9# 3, 6, or 9
 J = no_of_covs+3
 I = J-1
 treatment_col = I-1 # by construction
@@ -39,7 +39,7 @@ cand_source_iv_only =vector("list", 100)
 
 
 for (i in 1:100) {
-candidates <- estimated_confounder_index_v2(p_values_iv[i,], p_values_indp_cond[i,])
+candidates <- estimated_confounder_index(p_values_iv[i,], p_values_indp_cond[i,])
 cand_confounder_idx[[i]] <- candidates
 candidates <- estimated_treatmet_and_outcome_ind(p_values_iv[i,], p_values_indp_undcond[i,])
 cand_source_idx[[i]] <- candidates
