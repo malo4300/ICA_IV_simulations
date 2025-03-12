@@ -47,26 +47,57 @@ def gather_statistics(errors, rmse, mae, std):
     std.append(errors["STD"])
 
 
-def plot_errors(err, rmse, mae, std, ax, level, name_of_simulation):
+
+def plot_errors(err, rmse, mae, std, ax, level, name_of_simulation, y_lim = 8):
     """Creates boxplots and adds legend with RMSE, MAE, and STD."""
     df_long = err.melt(var_name="variable", value_name="value").dropna()
-    sns.boxplot(data=df_long, y="value", hue="variable", ax=ax)
-    
-    ax.set_title(f"{name_of_simulation}:  {level}", fontsize=20)
-    ax.set_ylabel("Absolute deviation from true treatment effect", fontsize=20)
-    ax.set_xlabel("Methods", fontsize=20)
+
+    # Define the color palette
+    palette = sns.color_palette("Set2", n_colors=len(df_long["variable"].unique()))
+
+    boxplot = sns.boxplot(data=df_long, y="value", x="variable", hue="variable", ax=ax, palette=palette, legend=False)
+
+    ax.set_xlabel(f"{name_of_simulation}:  {level}", fontsize=30)
+    ax.set_ylabel("Absolute deviation from true treatment effect", fontsize=30)
+
+    ax.set_xticklabels([])  
     ax.tick_params(axis='both', which='major', labelsize=20)
-    ax.set_ylim((0,8))
-    palette = sns.color_palette(n_colors=err.shape[1])
-    #handles = [
-    #    mpatches.Patch(color=palette[i], label=f"RMSE = {rmse[i]:.2f}, MAE = {mae[i]:.2f}, Std = {std[i]:.2f}  : {err.columns[i]}")
-    #    for i in range(len(err.columns))
-    #]
+
+    ax.set_ylim((0, y_lim))
+
+
+    outlier_counts = df_long[df_long["value"] > y_lim].groupby("variable").size()
+
+
+    positions = ax.get_xticks()  
+    for pos, variable in zip(positions, df_long['variable'].unique()):
+        count = outlier_counts.get(variable, 0)  
+        
+
+        if count > 0:
+
+            
+
+            ax.text(
+                pos, y_lim -.05, f"⚡ {count} ⚡", 
+                ha='center', va='top', 
+                fontsize=15, color="white", 
+                bbox=dict(facecolor='red', edgecolor='black', boxstyle='round,pad=0.3')
+            )
+            
+    return palette
+
+
+
+
+def add_one_legend(fig, err, palette, size):
+    
     handles = [
         mpatches.Patch(color=palette[i], label=f"{err.columns[i]}")
         for i in range(len(err.columns))
     ]
-    ax.legend(handles=handles, loc="upper center", fontsize=15)
+    
+    fig.legend(handles=handles, loc="upper center", ncol=err.shape[1], fontsize=size, bbox_to_anchor=(0.5, 1.1))
 
 from sklearn.linear_model import LinearRegression
 def calculate_ols_estimate(path = "data_generation/different_confounding_levels/data/", name = "data_obs_large_conf_3_"):
@@ -117,16 +148,14 @@ def plot_cases_vs_performance(method_summary, metric, simulation):
     fig, ax = plt.subplots(1, 3, figsize=(15, 5), sharey=True)
 
 
-  
-
 
     for i, level in enumerate(method_summary.keys()):
         methods = method_summary[level]["cases"].keys()
         cases = method_summary[level]["cases"].values()
-        rmse = method_summary[level][metric]
+        out = method_summary[level][metric]
         palette = sns.color_palette("Set1", n_colors=len(methods))
 
-        ax[i].scatter(cases, rmse, c=palette, label=methods)
+        ax[i].scatter(cases, out, c=palette, label=methods)
     
 
         ax[i].set_title(f"{simulation}: {level}")

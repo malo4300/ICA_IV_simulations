@@ -1,10 +1,10 @@
 source("treatment_effect_estimation/treatment_effect_estimators/treatment_effect_estimators.R")
 
-n = 1000
+n = 10000
 J = 9
 I = J-1
 treatment_col = I-1 
-# change the functions for different mehtods
+# change the functions for different methods
 
 
 get_signals = function(seed){
@@ -42,7 +42,7 @@ cand_source_iv_only =vector("list", 100)
 
 
 for (i in 1:100) {
-  candidates <- estimated_confounder_index_proper_test(p_values_iv[i,], p_values_indp_cond[i,])
+  candidates <- estimated_confounder_index(p_values_iv[i,], p_values_indp_cond[i,])
   cand_confounder_idx[[i]] <- candidates
   candidates <- estimated_treatmet_and_outcome_ind(p_values_iv[i,], p_values_indp_undcond[i,])
   cand_source_idx[[i]] <- candidates
@@ -78,7 +78,7 @@ rmse(true_treatment_effect_confounder_idx, estimated_treatment_efect_confounder_
 rmse(true_treatment_effect_confounder_idx, ols_biased)
 rmse(true_treatment_effect_confounder_idx, estimated_treatment_efect_column_extraction)
 
-#save_treatment_estimation(list(seed = ind-1,
+save_treatment_estimation(list(seed = ind-1,
                                true_treatment_effect = true_treatment_effect_confounder_idx,
                                estimated_treatment_using_confounder_source = estimated_treatment_efect_confounder_idx,
                                ols_biased = ols_biased,
