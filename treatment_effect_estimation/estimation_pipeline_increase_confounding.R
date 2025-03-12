@@ -1,6 +1,6 @@
 source("treatment_effect_estimation/treatment_effect_estimators/treatment_effect_estimators.R")
 
-conf = 1
+conf = 6
 J = 9
 I = J-1
 treatment_col = I-1 # by construction
@@ -198,3 +198,4 @@ save_treatment_estimation(list(seed = ind-1,
                                ols_biased = ols_biased,
                                column_extraction = estimated_treatment_efect_column_extraction,
                                level_of_confounding = level_of_confounding), paste("true_sources_iv_only_cn_", conf, sep =""))
+

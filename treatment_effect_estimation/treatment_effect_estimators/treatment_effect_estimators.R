@@ -34,6 +34,7 @@ estimated_confounder_index = function(p_values_iv,p_values_indp){
   ordered_p_values =  sort(as.numeric(p_values_indp))
   if(ordered_p_values[2] == ordered_p_values[3]){
     warning("Independence test return non-unique candidates for treatment and confounde source")
+    return(NA)
   }
   
   candidates = which(ordered_p_values[2]  >= as.numeric(p_values_indp))
@@ -46,6 +47,7 @@ estimated_confounder_index = function(p_values_iv,p_values_indp){
   
   if(length(final_candidates)>1){
     warning("Final candidate not unique")
+    return(NA)
   }
   if(length(final_candidates) == 0){
     warning("No candidate: return NA")
@@ -78,13 +80,23 @@ estimated_confounder_index_proper_test = function(p_values_iv,p_values_indp){
 
 estimated_treatmet_and_outcome_ind = function(p_values_iv,p_values_indp_undcond){
   
-
-  candidate_outcome=  which.max(as.numeric(p_values_indp_undcond))
-  candidate_treatment = which.max(as.numeric(p_values_iv))
+  mx = max(as.numeric(p_values_indp_undcond))
+  candidate_outcome=  which(as.numeric(p_values_indp_undcond) == mx)
+  if (length(candidate_outcome)!=1) {
+    warning("candidate_outcome not unique")
+    return(NA)
+  }
+  
+  mx  = max(as.numeric(p_values_iv))
+  candidate_treatment =  which(as.numeric(p_values_iv) == mx)
+  if (length(candidate_treatment)!=1) {
+    warning("candidate_treatment not unique")
+    return(NA)
+  }
   
   if(candidate_outcome == candidate_treatment) {
     warning("Final candidates are the same")
-    
+    return(NA)
   }
   
   return(c(candidate_outcome,candidate_treatment ))
@@ -152,16 +164,23 @@ rmse = function(true_treatment_effect, estimated_treatment_efect){
 
 non_sense_method = function(p_values_iv,p_values_indp_undcond){
   
-  # for the independence test, the only not independent sources should be the treatment and confounded source, pick the smallest two p-values if unique
+  mn = min(as.numeric(p_values_indp_undcond))
+  candidate_outcome=  which(as.numeric(p_values_indp_undcond) == mn)
+  if (length(candidate_outcome)>1) {
+    warning("candidate_outcome not unique")
+    return(NA)
+  }
   
-  
-  candidate_outcome=  which.min(as.numeric(p_values_indp_undcond))
-  candidate_treatment = which.max(as.numeric(p_values_iv))
-  # find the max p-values for the candidates and remove this 
+  mx  = max(as.numeric(p_values_iv))
+  candidate_treatment =  which(as.numeric(p_values_iv) == mx)
+  if (length(candidate_treatment)>1) {
+    warning("candidate_treatment not unique")
+    return(NA)
+  }
   
   if(candidate_outcome == candidate_treatment) {
     warning("Final candidates are the same")
-    
+    return(NA)
   }
   
   return(c(candidate_outcome,candidate_treatment ))
@@ -172,6 +191,7 @@ iv_only = function(p_values_iv){
   
   if (sum(p_values_iv == mx)> 1){
     warning("Final candidate not unique")
+    return(NA)
     
   }
   return(which(p_values_iv == mx))
@@ -181,7 +201,7 @@ iv_only = function(p_values_iv){
 
 
 iv_only_estimation = function(cand_source_iv_only){
-  ind = which(sapply(cand_source_iv_only, function(x) length(x) == 1))
+    ind = which(sapply(cand_source_iv_only, function(x) !is.na(x)))
   
   l = length(ind)
   print(l)
@@ -225,7 +245,7 @@ iv_only_estimation = function(cand_source_iv_only){
 remove_two_treatment_estimtaion = function(cand_source_non_sense){
   
   
-  ind = which(sapply(cand_source_non_sense, function(x) x[1] != x[2]))
+  ind = which(sapply(cand_source_non_sense, function(x) all(!is.na(x))))
   
   l = length(ind)
   print(l)
@@ -267,7 +287,7 @@ remove_two_treatment_estimtaion = function(cand_source_non_sense){
 
 
 remove_treatment_and_outcome_estimation = function(cand_source_idx){
-  ind = which(sapply(cand_source_idx, function(x) x[1] != x[2]))
+  ind =  which(sapply(cand_source_idx, function(x) all(!is.na(x))))
   
   l = length(ind)
   print(l)

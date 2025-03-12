@@ -1,6 +1,6 @@
 source("treatment_effect_estimation/treatment_effect_estimators/treatment_effect_estimators.R")
 
-n = 10000
+n = 1000
 J = 9
 I = J-1
 treatment_col = I-1 
@@ -122,7 +122,7 @@ save_treatment_estimation(list(seed = ind-1,
 
 
 
-### non-sense 
+### heuristic
 
 
 

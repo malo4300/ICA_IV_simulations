@@ -3,6 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
+from tabulate import tabulate
 
 def calc_error(df):
     """
@@ -140,7 +141,9 @@ def print_method_summary(method_summary):
         col = method_summary[level]["cases"].keys()
         cases = method_summary[level]["cases"].values()
 
-        print(pd.DataFrame([method_summary[level]["rmse"], method_summary[level]["mae"], method_summary[level]["std"], cases], columns=col, index=["RMSE", "MAE", "STD", "Cases"]))
+        df = pd.DataFrame([method_summary[level]["rmse"], method_summary[level]["mae"], method_summary[level]["std"], cases], columns=col, index=["RMSE", "MAE", "STD", "Cases"])
+        df = df.round(2)  # Round the scores to two digits
+        print(tabulate(df, headers='keys', tablefmt='psql'))
 
 
 
