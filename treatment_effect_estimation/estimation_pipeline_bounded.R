@@ -1,7 +1,5 @@
 source("treatment_effect_estimation/treatment_effect_estimators/treatment_effect_estimators.R")
 
-##################################################################################
-#### change paths in line 6 to 25 to Either use VarEM, VarEM, or true sources
 
 J = 9
 I = J-1
@@ -87,7 +85,7 @@ save_treatment_estimation(list(seed = ind-1,
                               estimated_treatment_using_confounder_source = estimated_treatment_efect_confounder_idx,
                               ols_biased = ols_biased,
                              column_extraction = estimated_treatment_efect_column_extraction,
-                            level_of_confounding = level_of_confounding), "true_sources_confounder_source_bounded_treatment")
+                            level_of_confounding = level_of_confounding), "CausalVarEM_confounder_source_bounded_treatment")
 
 
 ##############################
@@ -128,7 +126,7 @@ save_treatment_estimation(list(seed = ind-1,
                              estimated_treatment_on_sources = estimated_treatment_efect_source_idx,
                             ols_biased = ols_biased,
                            column_extraction = estimated_treatment_efect_column_extraction,
-                          level_of_confounding = level_of_confounding), "true_sources_7_sources_bounded_treatment")
+                          level_of_confounding = level_of_confounding), "CausalVarEM_7_sources_bounded_treatment")
 
 
 
@@ -163,7 +161,7 @@ save_treatment_estimation(list(seed = ind-1,
                                mistaken_scheme = two_treatment_effect,
                                ols_biased = ols_biased,
                                column_extraction = estimated_treatment_efect_column_extraction,
-                               level_of_confounding = level_of_confounding), paste("true_sources_7_sources_nonsense_bounded_treatment"))
+                               level_of_confounding = level_of_confounding), paste("CausalVarEM_7_sources_nonsense_bounded_treatment"))
 
 
 
@@ -202,4 +200,4 @@ save_treatment_estimation(list(seed = ind-1,
                                iv_only_effect = iv_only_effect,
                                ols_biased = ols_biased,
                                column_extraction = estimated_treatment_efect_column_extraction,
-                               level_of_confounding = level_of_confounding), paste("true_sources_iv_only_bounded" ))
+                               level_of_confounding = level_of_confounding), paste("CausalVarEM_iv_only_bounded" ))
