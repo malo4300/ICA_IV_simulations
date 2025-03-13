@@ -162,7 +162,7 @@ rmse = function(true_treatment_effect, estimated_treatment_efect){
 
 
 
-non_sense_method = function(p_values_iv,p_values_indp_undcond){
+remove_two_treatment = function(p_values_iv,p_values_indp_undcond){
   
   mn = min(as.numeric(p_values_indp_undcond))
   candidate_outcome=  which(as.numeric(p_values_indp_undcond) == mn)
@@ -242,16 +242,16 @@ iv_only_estimation = function(cand_source_iv_only){
 
 
 
-remove_two_treatment_estimtaion = function(cand_source_non_sense){
+remove_two_treatment_estimtaion = function(cand_source_two_treatment){
   
   
-  ind = which(sapply(cand_source_non_sense, function(x) all(!is.na(x))))
+  ind = which(sapply(cand_source_two_treatment, function(x) all(!is.na(x))))
   
   l = length(ind)
   print(l)
   
   
-  true_treatment_effect_nonsense = rep(0,l)
+  true_treatment_effect_two_treatment = rep(0,l)
   effect_est = rep(NA,l)
   ols_biased = rep(NA,l)
   estimated_treatment_efect_column_extraction = rep(NA,l)
@@ -263,12 +263,12 @@ remove_two_treatment_estimtaion = function(cand_source_non_sense){
     indx = ind[i]
     signals = get_signals(seed)
     data = get_data(seed)
-    remove = unlist(cand_source_non_sense[indx])
+    remove = unlist(cand_source_two_treatment[indx])
     df = data.frame(y = data[,I], treatment = data[, treatment_col], sign = signals[,-remove])
     fit = lm(y~.-1,df)  
     effect_est[i] = coef(fit)["treatment"] 
     true_mm = get_true_mixing_matrix(seed)
-    true_treatment_effect_nonsense[i] = column_extraction(true_mm)
+    true_treatment_effect_two_treatment[i] = column_extraction(true_mm)
     ols_biased[i] = classic_ols(data)
     mm = get_estimated_mixing_matrix(seed)
     estimated_treatment_efect_column_extraction[i] = column_extraction(mm)
@@ -277,7 +277,7 @@ remove_two_treatment_estimtaion = function(cand_source_non_sense){
   }  
   return(data.frame(
     ind,
-    true_treatment_effect_nonsense ,
+    true_treatment_effect_two_treatment ,
     effect_est ,
     ols_biased ,
     estimated_treatment_efect_column_extraction ,

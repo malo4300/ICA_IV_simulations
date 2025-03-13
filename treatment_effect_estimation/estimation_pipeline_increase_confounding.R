@@ -7,7 +7,7 @@ treatment_col = I-1 # by construction
 
 
 get_signals = function(seed){
-  read.csv(get_path(paste0("data_generation/different_confounding_levels/data/true_signals_large_conf_", conf, "_"), seed))
+  read.csv(get_path(paste0("data_generation/different_confounding_levels/data/estimated_signals_CausalVarEM_large_conf_", conf, "_"), seed))
 }
 get_estimated_mixing_matrix = function(seed){
   read.csv(paste0("data_generation/different_confounding_levels/data/estimated_mixing_CausalVarEM_large_conf_", conf, "_", seed, ".csv"))
@@ -27,14 +27,14 @@ save_treatment_estimation = function(list_of_df, name){
 }
 
 
-p_values_iv = read.csv(paste("data_generation/different_confounding_levels/true_source_conf_",conf,".csv", sep = ""), row.names = 1)[-1]
-p_values_indp_cond = read.csv(paste("data_generation/different_confounding_levels/p_values_conditional_true_sources_",conf,".csv", sep = ""), row.names = NULL, header= FALSE)[-1]
-p_values_indp_undcond = read.csv(paste("data_generation/different_confounding_levels/p_values_unconditional_true_sources_", conf, ".csv", sep = "") ,header= FALSE)[-1]
+p_values_iv = read.csv(paste("data_generation/different_confounding_levels/CausalVarEM_conf_",conf,".csv", sep = ""), row.names = 1)[-1]
+p_values_indp_cond = read.csv(paste("data_generation/different_confounding_levels/p_values_conditional_CausalVarEM_",conf,".csv", sep = ""), row.names = NULL, header= FALSE)[-1]
+p_values_indp_undcond = read.csv(paste("data_generation/different_confounding_levels/p_values_unconditional_CausalVarEM_", conf, ".csv", sep = "") ,header= FALSE)[-1]
 
 
 cand_confounder_idx <- vector("list", 100)
 cand_source_idx = vector("list", 100)
-cand_source_non_sense = vector("list", 100)
+cand_source_two_treatment = vector("list", 100)
 cand_source_iv_only =vector("list", 100)
 
 
@@ -45,8 +45,8 @@ for (i in 1:100) {
   cand_confounder_idx[[i]] <- candidates
   candidates <- estimated_treatmet_and_outcome_ind(p_values_iv[i,], p_values_indp_undcond[i,])
   cand_source_idx[[i]] <- candidates
-  candidates <- non_sense_method(p_values_iv[i,], p_values_indp_undcond[i,])
-  cand_source_non_sense[[i]] <- candidates
+  candidates <- remove_two_treatment(p_values_iv[i,], p_values_indp_undcond[i,])
+  cand_source_two_treatment[[i]] <- candidates
   candidates <- iv_only(p_values_iv[i,])
   cand_source_iv_only[[i]] <- candidates
   
@@ -85,7 +85,7 @@ save_treatment_estimation(list(seed = ind-1,
                                estimated_treatment_using_confounder_source = estimated_treatment_efect_confounder_idx,
                                ols_biased = ols_biased,
                                column_extraction = estimated_treatment_efect_column_extraction,
-                               level_of_confounding = level_of_confounding), paste("true_sources_confounder_source_cn_", conf, sep =""))
+                               level_of_confounding = level_of_confounding), paste("CausalVarEM_confounder_source_cn_", conf, sep =""))
 
 ##############################
 # estimation on 7 sources -----
@@ -123,7 +123,7 @@ save_treatment_estimation(list(seed = ind-1,
                                estimated_treatment_on_sources = estimated_treatment_efect_source_idx,
                               ols_biased = ols_biased,
                                column_extraction = estimated_treatment_efect_column_extraction,
-                               level_of_confounding = level_of_confounding), paste("true_sources_7_sources_cn_", conf, sep =""))
+                               level_of_confounding = level_of_confounding), paste("CausalVarEM_7_sources_cn_", conf, sep =""))
 
 
 
@@ -131,36 +131,36 @@ save_treatment_estimation(list(seed = ind-1,
 
 ####remove the most information about T 
 
-est = remove_two_treatment_estimtaion(cand_source_non_sense)
+est = remove_two_treatment_estimtaion(cand_source_two_treatment)
 ind = est$ind
-true_treatment_effect_nonsense = est$true_treatment_effect_nonsense
+true_treatment_effect_two_treatment = est$true_treatment_effect_two_treatment
 two_treatment_effect = est$effect_est
 ols_biased =est$ols_biased
 estimated_treatment_efect_column_extraction = est$estimated_treatment_efect_column_extraction
 level_of_confounding = est$level_of_confounding
 
-plot(true_treatment_effect_nonsense,two_treatment_effect ,xlab = "True treatment effect", ylab = "Estimated treatment effect", ylim = c(-3,3))
-points(true_treatment_effect_nonsense, ols_biased, col ="red")
-points(true_treatment_effect_nonsense, estimated_treatment_efect_column_extraction, col ="blue")
+plot(true_treatment_effect_two_treatment,two_treatment_effect ,xlab = "True treatment effect", ylab = "Estimated treatment effect", ylim = c(-3,3))
+points(true_treatment_effect_two_treatment, ols_biased, col ="red")
+points(true_treatment_effect_two_treatment, estimated_treatment_efect_column_extraction, col ="blue")
 abline(a = 0, b = 1)
 
 
-rmse(true_treatment_effect_nonsense, two_treatment_effect)
-rmse(true_treatment_effect_nonsense, ols_biased)
-rmse(true_treatment_effect_nonsense, estimated_treatment_efect_column_extraction)
+rmse(true_treatment_effect_two_treatment, two_treatment_effect)
+rmse(true_treatment_effect_two_treatment, ols_biased)
+rmse(true_treatment_effect_two_treatment, estimated_treatment_efect_column_extraction)
 
 
-mean(abs(true_treatment_effect_nonsense-two_treatment_effect))
-mean(abs(true_treatment_effect_nonsense-ols_biased))
+mean(abs(true_treatment_effect_two_treatment-two_treatment_effect))
+mean(abs(true_treatment_effect_two_treatment-ols_biased))
 
 
 
 save_treatment_estimation(list(seed = ind-1,
-                               true_treatment_effect = true_treatment_effect_nonsense,
+                               true_treatment_effect = true_treatment_effect_two_treatment,
                                mistaken_scheme = two_treatment_effect,
                                ols_biased = ols_biased,
                                column_extraction = estimated_treatment_efect_column_extraction,
-                               level_of_confounding = level_of_confounding), paste("true_sources_7_sources_nonsense_cn_", conf, sep =""))
+                               level_of_confounding = level_of_confounding), paste("CausalVarEM_7_sources_nonsense_cn_", conf, sep =""))
 
 
 
@@ -197,5 +197,5 @@ save_treatment_estimation(list(seed = ind-1,
                                iv_only_effect = iv_only_effect,
                                ols_biased = ols_biased,
                                column_extraction = estimated_treatment_efect_column_extraction,
-                               level_of_confounding = level_of_confounding), paste("true_sources_iv_only_cn_", conf, sep =""))
+                               level_of_confounding = level_of_confounding), paste("CausalVarEM_iv_only_cn_", conf, sep =""))
 
