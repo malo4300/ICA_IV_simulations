@@ -1,6 +1,6 @@
 source("treatment_effect_estimation/treatment_effect_estimators/treatment_effect_estimators.R")
 
-n = 1000
+n = 10000
 J = 9
 I = J-1
 treatment_col = I-1 
@@ -44,12 +44,15 @@ cand_source_iv_only =vector("list", 100)
 for (i in 1:100) {
   candidates <- estimated_confounder_index(p_values_iv[i,], p_values_indp_cond[i,])
   cand_confounder_idx[[i]] <- candidates
-  candidates <- estimated_treatmet_and_outcome_ind(p_values_iv[i,], p_values_indp_undcond[i,])
-  cand_source_idx[[i]] <- candidates
-  candidates <- non_sense_method(p_values_iv[i,], p_values_indp_undcond[i,])
-  cand_source_non_sense[[i]] <- candidates
-  candidates <- iv_only(p_values_iv[i,])
-  cand_source_iv_only[[i]] <- candidates
+  #candidates <- estimated_treatmet_and_outcome_ind(p_values_iv[i,], p_values_indp_undcond[i,])
+  
+  #cand_source_idx[[i]] <- candidates
+  #candidates <- non_sense_method(p_values_iv[i,], p_values_indp_undcond[i,])
+  #cand_source_non_sense[[i]] <- candidates
+  
+  #candidates <- iv_only(p_values_iv[i,])
+  
+  #cand_source_iv_only[[i]] <- candidates
   
 }
 

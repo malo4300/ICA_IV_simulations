@@ -91,14 +91,15 @@ def plot_errors(err, rmse, mae, std, ax, level, name_of_simulation, y_lim = 8):
 
 
 
-def add_one_legend(fig, err, palette, size):
+def add_one_legend(fig, err, palette, size, rows = 1):
     
     handles = [
         mpatches.Patch(color=palette[i], label=f"{err.columns[i]}")
         for i in range(len(err.columns))
     ]
     
-    fig.legend(handles=handles, loc="upper center", ncol=err.shape[1], fontsize=size, bbox_to_anchor=(0.5, 1.1))
+    fig.legend(handles=handles, loc="upper center", ncol=err.shape[1] // rows + 1, fontsize=size, bbox_to_anchor=(0.5, 1.1))
+
 
 from sklearn.linear_model import LinearRegression
 def calculate_ols_estimate(path = "data_generation/different_confounding_levels/data/", name = "data_obs_large_conf_3_"):
