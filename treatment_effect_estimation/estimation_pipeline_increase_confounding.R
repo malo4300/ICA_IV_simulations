@@ -41,7 +41,7 @@ cand_source_iv_only =vector("list", 100)
 
 
 for (i in 1:100) {
-  candidates <- estimated_confounder_index(p_values_iv[i,], p_values_indp_cond[i,])
+  candidates <- estimated_confounder_index_proper_test(p_values_iv[i,], p_values_indp_cond[i,])
   cand_confounder_idx[[i]] <- candidates
   candidates <- estimated_treatmet_and_outcome_ind(p_values_iv[i,], p_values_indp_undcond[i,])
   cand_source_idx[[i]] <- candidates
@@ -79,6 +79,8 @@ rmse(true_treatment_effect_confounder_idx, estimated_treatment_efect_column_extr
 
 mean(abs(true_treatment_effect_confounder_idx-estimated_treatment_efect_confounder_idx))
 mean(abs(true_treatment_effect_confounder_idx-ols_biased))
+
+std(true_treatment_effect_confounder_idx-estimated_treatment_efect_confounder_idx)
 
 save_treatment_estimation(list(seed = ind-1,
                                true_treatment_effect = true_treatment_effect_confounder_idx,
