@@ -1,6 +1,21 @@
-# Combinding ICA with an instrument validty test
+# Combining ICA with an Instrument Validity Test  
 
-In 'data_generation' each simulation has its own folder with one python file 'simulation.py' and one R file 'iv_test_generation.R'. Each of them implement one function that can be run from the file 'IV_on_ICA.R' or 'run_simulation.py'. In combination they run everything for the specific simulation from generating the data, running ICA, doing the independence and IV tests. 
+This repository contains the code for my semester project, where I combine Independent Component Analysis (ICA) with an Instrumental Variable (IV) validity test to estimate the treatment effect in the presence of a hidden confounder.  
 
-These datasets are the foundation of the treatment estimators implemented in 'treatment_effect_estimation'.
-The IV test is not running without the code in the folder data_generation/IV_code. 
+## Repository Structure  
+
+### `data_generation/`  
+Each simulation has its own folder, containing:  
+- A Python script (`simulation.py`)  
+- An R script (`iv_test_generation.R`)  
+
+Each script implements a function that can be executed from either `IV_on_ICA.R` or `run_simulation.py`. Together, these scripts handle the entire pipeline for a given simulation, including:  
+1. Data generation  
+2. Running ICA  
+3. Performing independence and IV tests  
+
+### `treatment_effect_estimation/`  
+This folder contains the treatment effect estimators, which rely on the datasets generated in `data_generation/`.  
+
+### `data_generation/IV_code/`  
+The IV test requires the code in this folder to run properly.  For my simulations it was provided by Patrick Burauel. 
